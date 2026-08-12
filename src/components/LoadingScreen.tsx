@@ -3,20 +3,23 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const messages = [
-  "Membaca ZIP ke dalam memori browser...",
-  "Memindai direktori file...",
-  "Mencari letak file followers & following JSON (Fuzzy Search)...",
-  "Mengekstrak data list jaringan (string_list_data)...",
-  "Membangun algoritma Himpunan (Sets)...",
-  "Mengkalkulasi irisan untuk Mutuals...",
-  "Mencari selisih (Unfollowers dan Fans)...",
-  "Mengamankan data dari Inspect Element (Anti-F12)...",
-  "Menyiapkan Dashboard...",
-];
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function LoadingScreen() {
+  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const messages = [
+    t('loadingMsg0'),
+    t('loadingMsg1'),
+    t('loadingMsg2'),
+    t('loadingMsg3'),
+    t('loadingMsg4'),
+    t('loadingMsg5'),
+    t('loadingMsg6'),
+    t('loadingMsg7'),
+    t('loadingMsg8')
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,7 +27,7 @@ export default function LoadingScreen() {
     }, 400);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [messages.length]);
 
   return (
     <motion.div 
@@ -39,7 +42,7 @@ export default function LoadingScreen() {
           <div className="w-3 h-3 rounded-full bg-green-500"></div>
         </div>
         <div className="mx-auto text-slate-500 text-xs font-semibold tracking-wider uppercase">
-          Terminal - Proses Analisis
+          {t('terminalTitle')}
         </div>
       </div>
       <div className="p-6 h-72 overflow-hidden flex flex-col justify-end bg-[#0B1120]">

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, Legend } from 'recharts';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface GrowthChartProps {
   data: { date: string, followers: number, following: number }[];
@@ -10,6 +11,8 @@ interface GrowthChartProps {
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
 export default function GrowthChart({ data }: GrowthChartProps) {
+  const { t, language } = useLanguage();
+  const MONTHS = t('months') as unknown as string[];
   const [viewMode, setViewMode] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedYear, setSelectedYear] = useState<string>('');
 
@@ -30,7 +33,7 @@ export default function GrowthChart({ data }: GrowthChartProps) {
   // Proses data berdasarkan mode yang dipilih
   const chartData = useMemo(() => {
     if (!data || data.length === 0) {
-      return [{ displayDate: 'Belum ada data' }];
+      return [{ displayDate: t('growthNoData') }];
     }
 
     if (viewMode === 'yearly') {
@@ -72,16 +75,16 @@ export default function GrowthChart({ data }: GrowthChartProps) {
         following: monthlyMap[m]?.following > 0 ? monthlyMap[m].following : undefined
       }));
     }
-  }, [data, viewMode, selectedYear]);
+  }, [data, viewMode, selectedYear, MONTHS, t]);
 
   return (
     <div className="w-full mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         
         <div className="flex flex-col">
-          <h3 className="text-xl font-bold text-slate-800">Grafik Penambahan Followers Baru</h3>
+          <h3 className="text-xl font-bold text-slate-800">{t('growthTitle')}</h3>
           <p className="text-sm text-slate-500 mt-1">
-            {viewMode === 'monthly' ? `Detail penambahan setiap bulan di tahun ${selectedYear}` : 'Total penambahan dari tahun ke tahun'}
+            {viewMode === 'monthly' ? `${t('growthDescMonthly')} ${selectedYear}` : t('growthDescYearly')}
           </p>
         </div>
         
@@ -94,7 +97,7 @@ export default function GrowthChart({ data }: GrowthChartProps) {
               className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500 block p-2 outline-none cursor-pointer"
             >
               {availableYears.map(year => (
-                <option key={year} value={year}>Tahun {year}</option>
+                <option key={year} value={year}>{t('growthYear')} {year}</option>
               ))}
             </select>
           )}
@@ -106,7 +109,7 @@ export default function GrowthChart({ data }: GrowthChartProps) {
                 viewMode === 'monthly' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
               }`}
             >
-              Per Bulan
+              {t('growthPerMonth')}
             </button>
             <button 
               onClick={() => setViewMode('yearly')}
@@ -114,7 +117,7 @@ export default function GrowthChart({ data }: GrowthChartProps) {
                 viewMode === 'yearly' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
               }`}
             >
-              Per Tahun
+              {t('growthPerYear')}
             </button>
           </div>
         </div>
@@ -134,12 +137,12 @@ export default function GrowthChart({ data }: GrowthChartProps) {
             <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="circle" />
             
             {/* Followers Baru */}
-            <Bar dataKey="followers" name="Followers Baru" fill="#8B5CF6" radius={[4, 4, 0, 0]} maxBarSize={40}>
+            <Bar dataKey="followers" name={t('growthNewFollowers')} fill="#8B5CF6" radius={[4, 4, 0, 0]} maxBarSize={40}>
               <LabelList dataKey="followers" position="top" fill="#64748b" fontSize={11} fontWeight="bold" />
             </Bar>
             
             {/* Following Baru */}
-            <Bar dataKey="following" name="Following Baru" fill="#3B82F6" radius={[4, 4, 0, 0]} maxBarSize={40}>
+            <Bar dataKey="following" name={t('growthNewFollowing')} fill="#3B82F6" radius={[4, 4, 0, 0]} maxBarSize={40}>
               <LabelList dataKey="following" position="top" fill="#64748b" fontSize={11} fontWeight="bold" />
             </Bar>
           </BarChart>

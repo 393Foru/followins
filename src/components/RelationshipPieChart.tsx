@@ -1,6 +1,7 @@
 "use client";
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface RelationshipPieChartProps {
   unfollowers: number;
@@ -9,11 +10,12 @@ interface RelationshipPieChartProps {
 }
 
 export default function RelationshipPieChart({ unfollowers, fans, mutuals }: RelationshipPieChartProps) {
+  const { t } = useLanguage();
   // Gunakan palet warna yang modern dan senada dengan tema aplikasi (Pink, Violet, Blue)
   const data = [
-    { name: 'Tidak Follback Anda', value: unfollowers, color: '#ec4899' }, // Pink-500
-    { name: 'Mutual (Saling Follow)', value: mutuals, color: '#8b5cf6' }, // Violet-500
-    { name: 'Fans (Aku Tidak Follback)', value: fans, color: '#3b82f6' }, // Blue-500
+    { name: t('relNotFollowBack'), value: unfollowers, color: '#ec4899' }, // Pink-500
+    { name: t('relMutual'), value: mutuals, color: '#8b5cf6' }, // Violet-500
+    { name: t('relFans'), value: fans, color: '#3b82f6' }, // Blue-500
   ];
 
   // Sembunyikan bagian yang bernilai 0
@@ -34,9 +36,9 @@ export default function RelationshipPieChart({ unfollowers, fans, mutuals }: Rel
 
   return (
     <div className="w-full mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">Ringkasan Status Pertemanan</h3>
+      <h3 className="text-xl font-bold text-slate-800 mb-2">{t('relTitle')}</h3>
       <p className="text-sm text-slate-500 mb-6">
-        Melihat perbandingan jumlah antara orang yang saling follow, pengikut setia (fans), dan orang yang belum mem-follback Anda.
+        {t('relDesc')}
       </p>
       
       <div className="h-80 w-full flex justify-center items-center">

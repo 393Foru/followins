@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface CohortChartProps {
   data: { year: string, fans: number, mutuals: number, unfollowers: number }[];
 }
 
 export default function CohortChart({ data }: CohortChartProps) {
+  const { t } = useLanguage();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -26,9 +28,9 @@ export default function CohortChart({ data }: CohortChartProps) {
 
   return (
     <div className="w-full mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col h-full">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">Fans, Mutualan, dan Unfollower</h3>
+      <h3 className="text-xl font-bold text-slate-800 mb-2">{t('cohortTitle')}</h3>
       <p className="text-sm text-slate-500 mb-6">
-        Grafik ini mengelompokkan akun berdasarkan tahun pertama kali kalian terhubung (entah saat mereka mulai men-follow Anda, atau Anda men-follow mereka). Dari kelompok tahun tersebut, Anda bisa melihat berapa jumlah akun yang saat ini berstatus sebagai Mutualan, Fans, atau Unfollower.
+        {t('cohortDesc')}
       </p>
       
       <div className="h-80 w-full mt-auto">
@@ -44,9 +46,9 @@ export default function CohortChart({ data }: CohortChartProps) {
             />
             <Legend verticalAlign="bottom" height={36} iconType="circle" />
             
-            <Bar dataKey="mutuals" name="Mutualan" stackId="a" fill="#8b5cf6" maxBarSize={50} />
-            <Bar dataKey="fans" name="Fans" stackId="a" fill="#3b82f6" maxBarSize={50} />
-            <Bar dataKey="unfollowers" name="Unfollower" stackId="a" fill="#ec4899" maxBarSize={50} radius={[4, 4, 0, 0]} />
+            <Bar dataKey="mutuals" name={t('cohortMutuals')} stackId="a" fill="#8b5cf6" maxBarSize={50} />
+            <Bar dataKey="fans" name={t('cohortFans')} stackId="a" fill="#3b82f6" maxBarSize={50} />
+            <Bar dataKey="unfollowers" name={t('cohortUnfollowers')} stackId="a" fill="#ec4899" maxBarSize={50} radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -59,11 +61,11 @@ export default function CohortChart({ data }: CohortChartProps) {
             disabled={currentPage === totalPages}
             className="text-sm font-bold text-pink-500 hover:text-pink-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1"
           >
-            <span>&larr;</span> Lebih Lama
+            <span>&larr;</span> {t('cohortOlder')}
           </button>
           
           <span className="text-xs font-semibold bg-slate-100 text-slate-500 px-3 py-1 rounded-full">
-            Halaman {currentPage} dari {totalPages}
+            {t('cohortPage')} {currentPage} {t('from')} {totalPages}
           </span>
           
           <button 
@@ -71,7 +73,7 @@ export default function CohortChart({ data }: CohortChartProps) {
             disabled={currentPage === 1}
             className="text-sm font-bold text-pink-500 hover:text-pink-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1"
           >
-            Lebih Baru <span>&rarr;</span>
+            {t('cohortNewer')} <span>&rarr;</span>
           </button>
         </div>
       )}

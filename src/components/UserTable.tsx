@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Lock } from 'lucide-react';
 import PaywallModal from './PaywallModal';
 import { deobfuscate } from '@/utils/crypto';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface UserTableProps {
   unfollowers: string[];
@@ -11,6 +12,7 @@ interface UserTableProps {
 }
 
 export default function UserTable({ unfollowers, fans }: UserTableProps) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'unfollowers' | 'fans'>('unfollowers');
   const [isPremium, setIsPremium] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,11 +62,11 @@ export default function UserTable({ unfollowers, fans }: UserTableProps) {
       <div className="p-8">
         <div className="flex justify-between items-center mb-6">
           <p className="text-sm font-medium text-slate-500">
-            Menampilkan <span className="text-slate-800 font-bold">{displayList.length}</span> dari {currentList.length} akun.
+            {t('showing')} <span className="text-slate-800 font-bold">{displayList.length}</span> {t('from')} {currentList.length} {t('accounts')}
           </p>
           {!isPremium && totalHidden > 0 && (
             <span className="text-xs font-bold px-4 py-1.5 bg-purple-100 text-purple-700 rounded-full border border-purple-200">
-              Maks 100 Acak (Versi Gratis)
+              {t('maxRandomFree')}
             </span>
           )}
         </div>
@@ -91,16 +93,14 @@ export default function UserTable({ unfollowers, fans }: UserTableProps) {
           <div className="mt-10 text-center p-10 bg-gradient-to-b from-white to-slate-50 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-stripes.png')] opacity-5"></div>
             <Lock className="mx-auto text-pink-500 mb-4" size={40} />
-            <h4 className="text-2xl font-bold text-slate-800 mb-3">Ada {totalHidden} Nama yang Disembunyikan</h4>
-            <p className="text-base text-slate-600 max-w-lg mx-auto mb-8 leading-relaxed">
-              Untuk melindungi sistem dari penyalahgunaan, versi gratis hanya menampilkan 100 nama <strong>secara acak</strong> (dilindungi secara sistem menggunakan Base64). Buka kunci untuk melihat seluruh daftar.
-            </p>
+            <h4 className="text-2xl font-bold text-slate-800 mb-3">{t('hiddenNames1')} {totalHidden} {t('hiddenNames2')}</h4>
+            <p className="text-base text-slate-600 max-w-lg mx-auto mb-8 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('hiddenDesc') }} />
             <button 
               onClick={() => setIsModalOpen(true)}
               className="px-8 py-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-white font-extrabold rounded-full shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/50 transition hover:scale-[1.02] active:scale-95 text-lg flex items-center gap-3 mx-auto"
             >
               <Lock size={20} />
-              Buka Semua Akses (Rp 15.000)
+              {t('unlockAll')}
             </button>
           </div>
         )}

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface SeasonalityRadarProps {
   data: { date: string, followers: number }[];
@@ -10,6 +11,8 @@ interface SeasonalityRadarProps {
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
 export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
+  const { t } = useLanguage();
+  const MONTHS = t('months') as unknown as string[];
   const [selectedYear, setSelectedYear] = useState<string>('all');
 
   const availableYears = useMemo(() => {
@@ -39,7 +42,7 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
       month,
       followers: monthlyMap[month]
     }));
-  }, [data, selectedYear]);
+  }, [data, selectedYear, MONTHS]);
 
   if (!data || data.length === 0) return null;
 
@@ -47,11 +50,11 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
     <div className="w-full mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col h-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
-          <h3 className="text-xl font-bold text-slate-800 mb-1">Bulan Paling Ramai</h3>
+          <h3 className="text-xl font-bold text-slate-800 mb-1">{t('seasonTitle')}</h3>
           <p className="text-sm text-slate-500">
             {selectedYear === 'all' 
-              ? 'Secara keseluruhan: Di bulan apa Anda paling banyak mendapat pengikut baru?'
-              : `Bulan apa yang paling ramai pengikut baru di tahun ${selectedYear}?`
+              ? t('seasonDescAll')
+              : `${t('seasonDescYear')} ${selectedYear}?`
             }
           </p>
         </div>
@@ -62,9 +65,9 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
             onChange={(e) => setSelectedYear(e.target.value)}
             className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg focus:ring-pink-500 focus:border-pink-500 block p-2 outline-none cursor-pointer shadow-sm min-w-[140px]"
           >
-            <option value="all">Semua Waktu</option>
+            <option value="all">{t('seasonAllTime')}</option>
             {availableYears.map(year => (
-              <option key={year} value={year}>Tahun {year}</option>
+              <option key={year} value={year}>{t('growthYear')} {year}</option>
             ))}
           </select>
         )}
@@ -76,7 +79,7 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
             <PolarGrid stroke="#e2e8f0" />
             <PolarAngleAxis dataKey="month" tick={{ fill: '#475569', fontSize: 13, fontWeight: 'bold' }} />
             <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={{ fill: '#94a3b8' }} />
-            <Radar name="Total Followers Didapat" dataKey="followers" stroke="#ec4899" strokeWidth={3} fill="#ec4899" fillOpacity={0.4} />
+            <Radar name={t('seasonTotalFollowers')} dataKey="followers" stroke="#ec4899" strokeWidth={3} fill="#ec4899" fillOpacity={0.4} />
             <Tooltip 
               contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
               itemStyle={{ fontWeight: 'bold', color: '#ec4899' }}

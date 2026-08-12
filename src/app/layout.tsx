@@ -17,13 +17,17 @@ export const metadata: Metadata = {
   description: "Lacak follower dan unfollower Instagram Anda secara aman (100% Client-Side).",
 };
 
+import { LanguageProvider } from "@/i18n/LanguageContext";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }
