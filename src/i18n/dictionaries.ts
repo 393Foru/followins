@@ -39,7 +39,7 @@ export const dictionaries = {
     // Footer.tsx
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
-    whatsappSupport: "WhatsApp Support",
+    emailSupport: "Email Support",
     footerText: "Followins. 100% Client-Side Privacy.",
 
     // LoadingScreen.tsx
@@ -100,6 +100,20 @@ export const dictionaries = {
     seasonAllTime: "Semua Waktu",
     seasonTotalFollowers: "Total Followers Didapat",
     
+    // LoyalFollowers.tsx
+    loyalTitle: "Followers Paling Setia",
+    loyalDesc: "Akun yang paling lama mengikuti Anda",
+
+    // AccountHealthRatio.tsx
+    healthTitle: "Rasio Akun",
+    healthDesc: "Perbandingan Followers vs Following",
+    healthGood: "Akun Populer / Sehat",
+    healthBad: "Lebih Banyak Mengikuti",
+
+    // PendingRequests.tsx
+    pendingTitle: "Menunggu Persetujuan",
+    pendingDesc: "Permintaan follow Anda yang belum di-ACC (akun di-Private)",
+
     months: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
 
     // How It Works
@@ -187,7 +201,7 @@ export const dictionaries = {
     // Footer.tsx
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
-    whatsappSupport: "WhatsApp Support",
+    emailSupport: "Email Support",
     footerText: "Followins. 100% Client-Side Privacy.",
 
     // LoadingScreen.tsx
@@ -248,6 +262,20 @@ export const dictionaries = {
     seasonAllTime: "All Time",
     seasonTotalFollowers: "Followers Gained",
     
+    // LoyalFollowers.tsx
+    loyalTitle: "Most Loyal Followers",
+    loyalDesc: "Accounts that have followed you the longest",
+
+    // AccountHealthRatio.tsx
+    healthTitle: "Account Ratio",
+    healthDesc: "Followers vs Following Comparison",
+    healthGood: "Popular / Healthy Account",
+    healthBad: "Following More People",
+
+    // PendingRequests.tsx
+    pendingTitle: "Pending Requests",
+    pendingDesc: "Your follow requests that haven't been accepted (Private accounts)",
+
     months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 
     // How It Works

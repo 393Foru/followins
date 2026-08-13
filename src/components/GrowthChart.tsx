@@ -78,23 +78,24 @@ export default function GrowthChart({ data }: GrowthChartProps) {
   }, [data, viewMode, selectedYear, MONTHS, t]);
 
   return (
-    <div className="w-full mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div className="w-full p-6 md:p-8 bg-white border border-zinc-200 rounded-3xl shadow-sm relative overflow-hidden">
+
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6 border-b border-zinc-200 pb-6 relative z-10">
         
         <div className="flex flex-col">
-          <h3 className="text-xl font-bold text-slate-800">{t('growthTitle')}</h3>
-          <p className="text-sm text-slate-500 mt-1">
+          <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">{t('growthTitle')}</h3>
+          <p className="text-sm text-zinc-500 font-light mt-2">
             {viewMode === 'monthly' ? `${t('growthDescMonthly')} ${selectedYear}` : t('growthDescYearly')}
           </p>
         </div>
         
         {/* Kontrol UI: Tahun & Toggle Mode */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {viewMode === 'monthly' && availableYears.length > 0 && (
             <select 
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500 block p-2 outline-none cursor-pointer"
+              className="bg-zinc-50 border border-zinc-200 text-zinc-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 block p-2.5 outline-none cursor-pointer [&>option]:bg-white [&>option]:text-zinc-900"
             >
               {availableYears.map(year => (
                 <option key={year} value={year}>{t('growthYear')} {year}</option>
@@ -102,19 +103,19 @@ export default function GrowthChart({ data }: GrowthChartProps) {
             </select>
           )}
 
-          <div className="flex bg-slate-100 p-1 rounded-xl">
+          <div className="flex bg-zinc-100 rounded-xl p-1 border border-zinc-200">
             <button 
               onClick={() => setViewMode('monthly')}
-              className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${
-                viewMode === 'monthly' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                viewMode === 'monthly' ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200' : 'text-zinc-500 hover:text-zinc-700'
               }`}
             >
               {t('growthPerMonth')}
             </button>
             <button 
               onClick={() => setViewMode('yearly')}
-              className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${
-                viewMode === 'yearly' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                viewMode === 'yearly' ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200' : 'text-zinc-500 hover:text-zinc-700'
               }`}
             >
               {t('growthPerYear')}
@@ -123,27 +124,28 @@ export default function GrowthChart({ data }: GrowthChartProps) {
         </div>
       </div>
       
-      <div className="h-72 w-full mt-8">
+      <div className="h-96 w-full mt-8 relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
-            <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4e4e7" />
+            <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{fill: '#71717a', fontSize: 12, fontFamily: 'monospace'}} dy={10} />
+            <YAxis axisLine={false} tickLine={false} tick={{fill: '#71717a', fontSize: 12, fontFamily: 'monospace'}} />
             <Tooltip 
-              cursor={{fill: '#f8fafc'}}
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              labelStyle={{ fontWeight: 'bold', color: '#1e293b', marginBottom: '8px' }}
+              cursor={{fill: '#f4f4f5'}}
+              contentStyle={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e4e4e7', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontFamily: 'monospace' }}
+              labelStyle={{ fontWeight: 'bold', color: '#18181b', marginBottom: '8px' }}
+              itemStyle={{ color: '#52525b' }}
             />
             <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="circle" />
             
             {/* Followers Baru */}
-            <Bar dataKey="followers" name={t('growthNewFollowers')} fill="#8B5CF6" radius={[4, 4, 0, 0]} maxBarSize={40}>
-              <LabelList dataKey="followers" position="top" fill="#64748b" fontSize={11} fontWeight="bold" />
+            <Bar dataKey="followers" name={t('growthNewFollowers')} fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={40}>
+              <LabelList dataKey="followers" position="top" fill="#71717a" fontSize={12} fontFamily="monospace" />
             </Bar>
             
             {/* Following Baru */}
-            <Bar dataKey="following" name={t('growthNewFollowing')} fill="#3B82F6" radius={[4, 4, 0, 0]} maxBarSize={40}>
-              <LabelList dataKey="following" position="top" fill="#64748b" fontSize={11} fontWeight="bold" />
+            <Bar dataKey="following" name={t('growthNewFollowing')} fill="#52525b" radius={[6, 6, 0, 0]} maxBarSize={40}>
+              <LabelList dataKey="following" position="top" fill="#71717a" fontSize={12} fontFamily="monospace" />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

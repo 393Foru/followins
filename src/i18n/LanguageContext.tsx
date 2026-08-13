@@ -7,6 +7,7 @@ interface LanguageContextType {
   language: Language;
   toggleLanguage: () => void;
   t: (key: DictionaryKey) => any;
+  formatCompactNumber: (num: number) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -32,8 +33,23 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     return dictionaries[language][key] || key;
   };
 
+  const formatCompactNumber = (num: number) => {
+    if (num < 1000) return num.toString();
+    
+    if (language === 'id') {
+      if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'mlr';
+      if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'jt';
+      if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'rb';
+    } else {
+      if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+      if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    }
+    return num.toString();
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+    <LanguageContext.Provider value={{ language, toggleLanguage, t, formatCompactNumber }}>
       {children}
     </LanguageContext.Provider>
   );

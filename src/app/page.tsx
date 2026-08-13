@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from 'react';
+import { ShieldCheck, Zap, Lock } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -18,15 +20,24 @@ import RelationshipPieChart from '@/components/RelationshipPieChart';
 import CohortChart from '@/components/CohortChart';
 import MutualStats from '@/components/MutualStats';
 import SeasonalityRadar from '@/components/SeasonalityRadar';
+import LoyalFollowers from '@/components/LoyalFollowers';
+import AccountHealthRatio from '@/components/AccountHealthRatio';
+import NewUnfollowersAlert from '@/components/NewUnfollowersAlert';
+import PendingRequests from '@/components/PendingRequests';
 import { parseInstagramZip, ParseResult } from '@/utils/instagramParser';
-import { saveHistory, HistoryRecord } from '@/utils/storage';
+import { saveHistory, HistoryRecord, saveLastScanData, getLastScanData } from '@/utils/storage';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle');
   const [result, setResult] = useState<ParseResult | null>(null);
   const [history, setHistory] = useState<HistoryRecord[]>([]);
   const [isDemo, setIsDemo] = useState(false);
+  
+  // States for new features
+  const [newUnfollowers, setNewUnfollowers] = useState<string[]>([]);
+  const [kutuLoncat, setKutuLoncat] = useState<string[]>([]);
+  const [isFirstScan, setIsFirstScan] = useState(false);
 
   const handleDemo = () => {
     setIsDemo(true);
@@ -34,9 +45,22 @@ export default function Home() {
     
     setTimeout(() => {
       setResult({
+        ownerUsername: "demo_user",
         unfollowers: Array.from({ length: 42 }).map((_, i) => `unfollower_user_${i}`),
         fans: Array.from({ length: 128 }).map((_, i) => `fan_user_${i}`),
         mutuals: Array.from({ length: 350 }).map((_, i) => `mutual_user_${i}`),
+        oldestFollowers: [
+          { username: "c2VsZW5hZ29tZXo=", timestamp: 1546300800 },
+          { username: "dGF5bG9yc3dpZnQ=", timestamp: 1548979200 },
+          { username: "emVuZGF5YQ==", timestamp: 1551398400 },
+          { username: "dG9taG9sbGFuZA==", timestamp: 1554076800 },
+          { username: "Y2hyaXNoZW1zd29ydGg=", timestamp: 1556668800 }
+        ],
+        pendingRequests: [
+          { username: "cHJpdmF0ZV91c2VyXzE=", timestamp: 1672531200 },
+          { username: "c2VjcmV0X2FjY291bnQ=", timestamp: 1675209600 },
+          { username: "aGlkZGVuX3Byb2ZpbGU=", timestamp: 1677628800 }
+        ],
         followersCount: 478,
         followingCount: 392,
         timeline: [
@@ -69,6 +93,9 @@ export default function Home() {
           { month: "Des", followers: 105 }
         ]
       });
+      setNewUnfollowers(["unfollower_user_0", "unfollower_user_1", "unfollower_user_2", "unfollower_user_3"]);
+      setKutuLoncat(["unfollower_user_1", "unfollower_user_3"]);
+      setIsFirstScan(false);
       setStatus('done');
     }, 2500);
   };
@@ -85,6 +112,28 @@ export default function Home() {
       await new Promise(r => setTimeout(r, 3800 - elapsed));
     }
     
+    // Feature: Historical Tracker & Kutu Loncat Detector
+    const trackerUsername = data.ownerUsername || 'my_account';
+    
+    const lastScan = getLastScanData(trackerUsername);
+    if (lastScan) {
+      // Find new unfollowers (in current unfollowers, but not in last scan's unfollowers)
+      const newUnf = data.unfollowers.filter(u => !lastScan.unfollowers.includes(u));
+      setNewUnfollowers(newUnf);
+      
+      // Find Kutu Loncat (was in fans or mutuals, now in unfollowers)
+      const hitAndRun = newUnf.filter(u => lastScan.fans.includes(u) || lastScan.mutuals.includes(u));
+      setKutuLoncat(hitAndRun);
+      setIsFirstScan(false);
+    } else {
+      setNewUnfollowers([]);
+      setKutuLoncat([]);
+      setIsFirstScan(true);
+    }
+    
+    // Save current data for next scan
+    saveLastScanData(trackerUsername, data.unfollowers, data.fans, data.mutuals);
+    
     setResult(data);
     
     // Simpan ke LocalStorage dan dapatkan riwayat lengkap
@@ -99,134 +148,239 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <Header />
+    <div className="flex flex-col min-h-screen bg-zinc-50 text-zinc-900 font-sans overflow-x-clip relative">
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Header />
       
-      <main className="flex-1 flex flex-col">
-        {status === 'idle' && (
-          <>
-            {/* Brutalist Split-Screen Hero */}
-            <div className="w-full flex flex-col lg:flex-row min-h-[85vh] border-b border-slate-200">
-              
-              {/* Left Column: Light / Typography */}
-              <div className="w-full lg:w-1/2 bg-[#f4f4f4] flex flex-col justify-center px-8 md:px-16 lg:px-24 py-20 relative overflow-hidden">
-                {/* Dot Pattern Background */}
-                <div 
-                  className="absolute inset-0 opacity-20 pointer-events-none" 
-                  style={{ backgroundImage: 'radial-gradient(circle at center, #000 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}
-                ></div>
+        <main className="flex-1 flex flex-col">
+          {status === 'idle' && (
+            <>
+              {/* Clean Minimalist Hero */}
+              <div className="w-full flex flex-col lg:flex-row items-center justify-center px-6 pt-10 pb-20 md:px-10 lg:px-16 gap-8 lg:gap-12">
                 
-                <div className="relative z-10">
-                  <h1 className="text-6xl md:text-7xl xl:text-[5.5rem] font-black tracking-tighter mb-8 text-black leading-[0.95] uppercase">
-                    {t('heroTitle1')} <br />
-                    {t('heroTitle2')}
-                  </h1>
+                {/* Left Column */}
+                <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10 text-center lg:text-left lg:pr-4">
+                  <motion.h1 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight mb-6 leading-[1.1]"
+                  >
+                    <span className="text-zinc-900">
+                      {t('heroTitle1')}
+                    </span>
+                    <br />
+                    <span className="text-zinc-900">
+                      {t('heroTitle2')}
+                    </span>
+                  </motion.h1>
                   
-                  <p className="text-xl md:text-2xl text-slate-800 max-w-xl leading-snug font-medium">
+                  <motion.p 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="text-lg md:text-xl text-zinc-600 max-w-xl leading-relaxed mx-auto lg:mx-0 font-light mb-8"
+                  >
                     {t('heroDesc')}
-                  </p>
-                </div>
-              </div>
+                  </motion.p>
 
-              {/* Right Column: Dark / Uploader */}
-              <div className="w-full lg:w-1/2 bg-[#0a0a0a] flex flex-col items-center justify-center p-8 md:p-12 relative overflow-hidden border-t lg:border-t-0 lg:border-l border-slate-800">
-                
-                <div className="w-full max-w-md relative z-10">
-                  <ZipUploader onFileSelect={handleFile} />
-                  
-                  <div className="w-full mt-6 text-center">
-                    <button 
-                      onClick={handleDemo}
-                      className="text-sm font-semibold text-slate-400 hover:text-white transition-colors underline underline-offset-4 decoration-slate-700 hover:decoration-white"
-                    >
-                      {t('language') === 'en' ? "View Live Demo" : "Lihat Contoh Hasil (Demo)"}
-                    </button>
+                  {/* Feature Checklist */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 sm:gap-6 text-sm font-medium text-zinc-700"
+                  >
+                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
+                      <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                      <span>{language === 'en' ? 'No Data Stored' : 'Data Aman'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
+                      <Zap className="w-4 h-4 text-amber-500" />
+                      <span>{language === 'en' ? 'Instant Results' : 'Hasil Instan'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
+                      <Lock className="w-4 h-4 text-blue-500" />
+                      <span>{language === 'en' ? 'Fully Private' : '100% Privat'}</span>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Right Column */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="w-full lg:w-1/2 flex flex-col items-center lg:items-end justify-center relative z-10"
+                >
+                  <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-xl p-6 md:p-8 shadow-sm relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                    <div className="relative z-10">
+                      <ZipUploader onFileSelect={handleFile} />
+                      
+                      <div className="w-full mt-6 text-center">
+                        <button 
+                          onClick={handleDemo}
+                          className="text-xs md:text-sm font-medium tracking-wider text-zinc-400 hover:text-emerald-400 transition-all underline underline-offset-4 decoration-zinc-700 hover:decoration-emerald-400"
+                        >
+                          {language === 'en' ? "View Live Demo" : "Lihat Contoh Hasil (Demo)"}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
-            </div>
 
-            <div className="w-full max-w-4xl mx-auto mb-10 mt-16 px-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6 }}
+              className="w-full px-6"
+            >
               <HistoryWidget />
-            </div>
+            </motion.div>
             
-            <HowItWorks />
-            <Features />
-            <PrivacySection />
-            <FAQ />
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
+              <HowItWorks />
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
+              <Features />
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
+              <PrivacySection />
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
+              <FAQ />
+            </motion.div>
           </>
         )}
 
         {status === 'loading' && (
-          <div className="w-full flex justify-center mt-12">
+          <div className="w-full flex justify-center py-20 px-6">
             <LoadingScreen />
           </div>
         )}
 
         {status === 'done' && result && (
-          <div className="w-full flex flex-col items-center">
-            <div className="w-full max-w-5xl flex justify-between items-end mb-6">
+          <div className="w-full flex flex-col gap-5 items-center px-4 md:px-8 pt-12 pb-20 max-w-[1400px] mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-end pb-6 gap-6 bg-white border border-zinc-200 rounded-xl p-8 shadow-sm"
+            >
               <div>
-                <h2 className="text-3xl font-extrabold text-slate-900">{t('summaryTitle')}</h2>
-                <p className="text-slate-500 mt-2 font-medium">{t('summaryDesc')}</p>
+                <h2 className="text-4xl md:text-5xl font-black text-zinc-900 tracking-tight">
+                  {result.ownerUsername ? `@${result.ownerUsername}` : t('summaryTitle')}
+                </h2>
+                <p className="text-xl text-zinc-600 font-light mt-4">
+                  {result.ownerUsername ? `${t('summaryTitle')} • ${t('summaryDesc')}` : t('summaryDesc')}
+                </p>
               </div>
               <button 
                 onClick={() => { setStatus('idle'); setIsDemo(false); }}
-                className="px-6 py-2.5 text-sm font-bold bg-white text-slate-700 border border-slate-200 rounded-full hover:bg-slate-100 hover:border-slate-300 transition shadow-sm"
+                className="px-8 py-4 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors shadow-sm"
               >
                 {t('checkAnotherBtn')}
               </button>
-            </div>
+            </motion.div>
+
+            {/* Fitur Baru: New Unfollowers Alert */}
+            <NewUnfollowersAlert newUnfollowers={newUnfollowers} kutuLoncat={kutuLoncat} isFirstScan={isFirstScan} />
 
             {isDemo && (
-              <div className="w-full max-w-5xl bg-indigo-50 border border-indigo-200 text-indigo-700 px-6 py-5 rounded-2xl mb-8 flex flex-col sm:flex-row items-center justify-between shadow-sm gap-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="w-full bg-blue-50 border border-blue-200 text-blue-900 p-8 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm gap-6"
+              >
                 <div>
-                  <h3 className="font-bold text-lg">{t('language') === 'en' ? "Demo Mode" : "Mode Demo"}</h3>
-                  <p className="text-sm opacity-80">{t('language') === 'en' ? "This is sample data. Upload your own ZIP file to see real insights." : "Ini adalah contoh data acak. Unggah file ZIP Anda sendiri untuk melihat data asli."}</p>
+                  <h3 className="font-bold text-2xl tracking-tight mb-2 flex items-center gap-3">
+                    <span className="flex h-3 w-3 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
+                    </span>
+                    {language === 'en' ? "Demo Mode" : "Mode Demo"}
+                  </h3>
+                  <p className="text-base text-blue-700">{language === 'en' ? "This is sample data. Upload your own ZIP file to see real insights." : "Ini adalah contoh data acak. Unggah file ZIP Anda sendiri untuk melihat data asli."}</p>
                 </div>
                 <button 
                   onClick={() => { setStatus('idle'); setIsDemo(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 bg-indigo-600 text-white font-bold rounded-full text-sm hover:bg-indigo-700 transition shrink-0"
+                  className="px-6 py-3 bg-white hover:bg-blue-50 border border-blue-200 text-blue-700 font-medium rounded-lg transition-colors shrink-0 shadow-sm"
                 >
-                  {t('language') === 'en' ? "Upload My File" : "Unggah File Saya"}
+                  {language === 'en' ? "Upload My File" : "Unggah File Saya"}
                 </button>
-              </div>
+              </motion.div>
             )}
             
-            <MetricCards 
-              unfollowers={result.unfollowers.length}
-              fans={result.fans.length}
-              mutuals={result.mutuals.length}
-            />
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full">
+              <MetricCards 
+                unfollowers={result.unfollowers.length}
+                fans={result.fans.length}
+                mutuals={result.mutuals.length}
+              />
+            </motion.div>
 
-            <RelationshipPieChart 
-              unfollowers={result.unfollowers.length}
-              fans={result.fans.length}
-              mutuals={result.mutuals.length}
-            />
+            <div className="w-full flex flex-col lg:flex-row gap-5 items-stretch">
+              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+                <RelationshipPieChart 
+                  unfollowers={result.unfollowers.length}
+                  fans={result.fans.length}
+                  mutuals={result.mutuals.length}
+                />
+              </motion.div>
+              
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+                <MutualStats data={result.mutualStats} />
+              </motion.div>
+            </div>
 
-            <GrowthChart data={result.timeline} />
-            
-            <MutualStats data={result.mutualStats} />
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full">
+              <GrowthChart data={result.timeline} />
+            </motion.div>
 
-            <div className="w-full flex flex-col lg:flex-row gap-6 mb-8">
-              <div className="w-full lg:w-3/5">
+            <div className="w-full flex flex-col lg:flex-row gap-5 items-stretch">
+              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+                <AccountHealthRatio 
+                  followers={result.followersCount} 
+                  following={result.followingCount} 
+                />
+              </motion.div>
+              
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+                <LoyalFollowers data={result.oldestFollowers} />
+              </motion.div>
+            </div>
+
+            <div className="w-full flex flex-col lg:flex-row gap-5 items-stretch">
+              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-3/5 flex">
                 <CohortChart data={result.cohortData} />
-              </div>
-              <div className="w-full lg:w-2/5">
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-2/5 flex">
                 <SeasonalityRadar data={result.timeline} />
-              </div>
+              </motion.div>
             </div>
             
-            <UserTable 
-              unfollowers={result.unfollowers}
-              fans={result.fans}
-            />
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full">
+              <PendingRequests data={result.pendingRequests} />
+            </motion.div>
+            
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full">
+              <UserTable 
+                unfollowers={result.unfollowers}
+                fans={result.fans}
+              />
+            </motion.div>
           </div>
         )}
-      </main>
-
-      <Footer />
+        </main>
+  
+        <Footer />
+      </div>
     </div>
   );
 }

@@ -58,3 +58,34 @@ export const getHistory = (): HistoryRecord[] => {
   }
   return [];
 };
+
+export interface LastScanData {
+  timestamp: number;
+  unfollowers: string[];
+  fans: string[];
+  mutuals: string[];
+}
+
+export const saveLastScanData = (username: string, unfollowers: string[], fans: string[], mutuals: string[]) => {
+  if (typeof window === 'undefined' || !username) return;
+  const data: LastScanData = {
+    timestamp: Date.now(),
+    unfollowers,
+    fans,
+    mutuals
+  };
+  localStorage.setItem(`followins_scan_${username}`, JSON.stringify(data));
+};
+
+export const getLastScanData = (username: string): LastScanData | null => {
+  if (typeof window === 'undefined' || !username) return null;
+  const existingStr = localStorage.getItem(`followins_scan_${username}`);
+  if (existingStr) {
+    try {
+      return JSON.parse(existingStr);
+    } catch (e) {
+      return null;
+    }
+  }
+  return null;
+};

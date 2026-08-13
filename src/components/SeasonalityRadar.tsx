@@ -47,11 +47,12 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="w-full mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col h-full">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
+
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6 border-b border-zinc-200 pb-6 relative z-10">
         <div>
-          <h3 className="text-xl font-bold text-slate-800 mb-1">{t('seasonTitle')}</h3>
-          <p className="text-sm text-slate-500">
+          <h3 className="text-2xl font-bold text-zinc-900 tracking-tight mb-2">{t('seasonTitle')}</h3>
+          <p className="text-sm text-zinc-600 font-light">
             {selectedYear === 'all' 
               ? t('seasonDescAll')
               : `${t('seasonDescYear')} ${selectedYear}?`
@@ -63,7 +64,7 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
           <select 
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg focus:ring-pink-500 focus:border-pink-500 block p-2 outline-none cursor-pointer shadow-sm min-w-[140px]"
+            className="bg-zinc-50 border border-zinc-200 text-zinc-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/50 block p-2.5 outline-none cursor-pointer [&>option]:bg-white [&>option]:text-zinc-900 min-w-[140px]"
           >
             <option value="all">{t('seasonAllTime')}</option>
             {availableYears.map(year => (
@@ -73,16 +74,16 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
         )}
       </div>
       
-      <div className="h-80 w-full mt-auto">
+      <div className="h-96 w-full mt-auto relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
-            <PolarGrid stroke="#e2e8f0" />
-            <PolarAngleAxis dataKey="month" tick={{ fill: '#475569', fontSize: 13, fontWeight: 'bold' }} />
-            <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={{ fill: '#94a3b8' }} />
-            <Radar name={t('seasonTotalFollowers')} dataKey="followers" stroke="#ec4899" strokeWidth={3} fill="#ec4899" fillOpacity={0.4} />
+            <PolarGrid stroke="#e4e4e7" />
+            <PolarAngleAxis dataKey="month" tick={{ fill: '#71717a', fontSize: 12, fontFamily: 'monospace' }} />
+            <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={{ fill: '#a1a1aa', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} />
+            <Radar name={t('seasonTotalFollowers')} dataKey="followers" stroke="#10b981" strokeWidth={2} fill="#34d399" fillOpacity={0.4} />
             <Tooltip 
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              itemStyle={{ fontWeight: 'bold', color: '#ec4899' }}
+              contentStyle={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e4e4e7', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontFamily: 'monospace' }}
+              itemStyle={{ fontWeight: 'bold', color: '#18181b' }}
             />
           </RadarChart>
         </ResponsiveContainer>

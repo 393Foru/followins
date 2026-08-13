@@ -31,28 +31,40 @@ export default function HistoryWidget() {
   );
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-8 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-      <div className="flex items-center gap-2 mb-4 text-slate-700">
-        <Clock className="w-5 h-5 text-pink-500" />
-        <h3 className="font-bold text-lg">{t('historyTitle')}</h3>
-        <span className="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full ml-auto">{date}</span>
+    <div className="w-full max-w-4xl mx-auto my-8 md:my-12 bg-zinc-950 rounded-xl p-6 shadow-2xl relative overflow-hidden font-mono border border-zinc-800">
+      <div className="flex items-center gap-4 mb-6 border-b border-zinc-800 pb-4 relative z-10">
+        <div className="bg-zinc-900 border border-zinc-700 p-2 rounded-lg">
+          <Clock className="w-5 h-5 text-emerald-500" />
+        </div>
+        <h3 className="font-bold text-xl text-zinc-300 tracking-tight flex items-center gap-2">
+          <span className="text-emerald-500 select-none">~ $</span> {t('historyTitle')}
+        </h3>
+        <span className="text-xs bg-zinc-900 text-emerald-400/70 px-3 py-1 rounded border border-zinc-800 ml-auto">
+          [{date}]
+        </span>
       </div>
       
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-rose-50 rounded-xl p-3 flex flex-col items-center justify-center text-center">
-          <UserMinus className="w-5 h-5 text-rose-500 mb-1" />
-          <span className="text-2xl font-extrabold text-slate-800">{history.unfollowers}</span>
-          <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">{t('cohortUnfollowers')}</span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10 text-sm">
+        <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-lg p-5 flex flex-col hover:bg-zinc-900 transition-colors">
+          <div className="flex items-center gap-3 mb-3">
+            <UserMinus className="w-5 h-5 text-rose-400" />
+            <span className="text-zinc-500">{t('cohortUnfollowers')}</span>
+          </div>
+          <span className="text-3xl font-black text-zinc-200 mt-auto">{history.unfollowers}</span>
         </div>
-        <div className="bg-emerald-50 rounded-xl p-3 flex flex-col items-center justify-center text-center">
-          <Heart className="w-5 h-5 text-emerald-500 mb-1" />
-          <span className="text-2xl font-extrabold text-slate-800">{history.fans}</span>
-          <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">{t('cohortFans')}</span>
+        <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-lg p-5 flex flex-col hover:bg-zinc-900 transition-colors">
+          <div className="flex items-center gap-3 mb-3">
+            <Heart className="w-5 h-5 text-emerald-400" />
+            <span className="text-zinc-500">{t('cohortFans')}</span>
+          </div>
+          <span className="text-3xl font-black text-zinc-200 mt-auto">{history.fans}</span>
         </div>
-        <div className="bg-blue-50 rounded-xl p-3 flex flex-col items-center justify-center text-center">
-          <Users className="w-5 h-5 text-blue-500 mb-1" />
-          <span className="text-2xl font-extrabold text-slate-800">{history.mutuals}</span>
-          <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">{t('cohortMutuals')}</span>
+        <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-lg p-5 flex flex-col hover:bg-zinc-900 transition-colors">
+          <div className="flex items-center gap-3 mb-3">
+            <Users className="w-5 h-5 text-indigo-400" />
+            <span className="text-zinc-500">{t('cohortMutuals')}</span>
+          </div>
+          <span className="text-3xl font-black text-zinc-200 mt-auto">{history.mutuals}</span>
         </div>
       </div>
     </div>

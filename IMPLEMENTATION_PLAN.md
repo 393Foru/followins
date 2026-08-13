@@ -9,16 +9,18 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 
 ## Tahap 2: Core Logic (Pengolahan Data Client-Side)
 - [x] Buat file utilitas `src/utils/instagramParser.ts`.
-- [x] Tulis fungsi membaca Buffer ZIP menggunakan `JSZip`.
+- [x] Tulis fungsi membaca Buffer ZIP menggunakan `JSZip` dan perluas parser untuk mendeteksi data tambahan (nama profil, riwayat permintaan *follow*, pengikut terlama).
 - [x] Tulis logika **Fuzzy Search** untuk menemukan file bereksistensi `.json` yang mengandung kata `followers` dan `following` tanpa bergantung pada *path* folder yang kaku.
 - [x] Tulis fungsi algoritma himpunan (Set) untuk mencari Unfollowers, Fans, dan Mutuals.
 
 ## Tahap 3: Halaman Upload & Dashboard UI
 - [x] Buat komponen `ZipUploader.tsx` di halaman utama (Drag & Drop UI + Tombol khusus Mobile).
 - [x] Hubungkan uploader dengan `instagramParser.ts`.
+- [x] Tambahkan fitur "Live Demo" untuk menampilkan contoh hasil analisis tanpa perlu mengunggah file.
 - [x] Peningkatan Landing Page: Tambahkan komponen informatif (`Features.tsx`, `HowItWorks.tsx`, `FAQ.tsx`, `PrivacySection.tsx`).
 - [x] Tambahkan `HistoryWidget.tsx` untuk menampilkan riwayat upload terakhir dari `LocalStorage` agar pengguna tidak perlu memproses ulang data.
 - [x] Buat halaman `/dashboard` yang menerima hasil data JSON.
+- [x] Peningkatan Dashboard Analytics: Tambahkan komponen pendeteksi Unfollowers Baru & "Kutu Loncat" (menggunakan komparasi sesi), daftar Pengikut Setia (Loyal Followers), Permintaan Menggantung (Pending Requests), dan Skor Kesehatan Akun (Account Health Ratio).
 - [x] Implementasikan `MetricCards.tsx` (Jumlah followers/unfollowers).
 - [x] Implementasikan `GrowthChart.tsx` dan fitur visualisasi lainnya (Cohort, Seasonality Radar, dll).
 - [x] Implementasikan `UserTable.tsx` (Menampilkan maksimal 100 akun yang dipilih secara **acak** untuk versi gratis. Setelah berbayar, tampilkan semua akun yang diurutkan abjad tanpa batas 100 akun).
@@ -26,7 +28,7 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 ## Tahap 4: Sistem Bisnis (Rate Limit & Paywall)
 - [ ] Buat Next.js API Route untuk mencatat batas harian IP (sementara gunakan memori lokal sebelum beralih ke Redis).
 - [x] Buat komponen `PaywallModal.tsx` dengan UI *mock-up* pembayaran QRIS.
-- [x] **Keamanan Paywall:** Terapkan enkripsi di sisi memori untuk daftar sisa nama, di mana *Decryption Key* hanya diberikan dari respons server setelah pembayaran sukses (Bypass F12 Protection).
+- [x] **Keamanan Paywall (Anti-F12):** Terapkan pencegahan *Inspect Element* dengan hanya me-render 100 data acak terdekripsi ke DOM, dan sisanya digantikan dengan *Skeleton Dummy Data* hingga pembayaran berhasil.
 
 ## Tahap 5: Standar Produksi (Keamanan, SEO & Support)
 - [x] **Error Handling:** Tambahkan logika pengecekan ekstensi file (harus `.zip`) dan batas maksimal ukuran (100MB) pada `ZipUploader.tsx`.

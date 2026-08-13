@@ -11,6 +11,9 @@ export interface ParseResult {
   cohortData: { year: string, fans: number, mutuals: number, unfollowers: number }[];
   mutualStats: { youFirst: number, themFirst: number, sameDay: number };
   seasonalityData: { month: string, followers: number }[];
+  ownerUsername?: string;
+  oldestFollowers: { username: string; timestamp: number }[];
+  pendingRequests: { username: string; timestamp: number }[];
 }
 
 // Extract usernames and timestamps robustly from variable Instagram JSON structures
@@ -57,6 +60,8 @@ export const parseInstagramZip = async (file: File): Promise<ParseResult> => {
   const followingSet = new Set<string>();
   const followersList: { username: string, timestamp: number }[] = [];
   const followingList: { username: string, timestamp: number }[] = [];
+  const pendingRequestsList: { username: string, timestamp: number }[] = [];
+  let ownerUsername = "";
 
   const processFile = async (relativePath: string, fileData: JSZip.JSZipObject) => {
     const lowerPath = relativePath.toLowerCase();
@@ -85,6 +90,29 @@ export const parseInstagramZip = async (file: File): Promise<ParseResult> => {
         });
       } catch (e) {
         console.error("Error parsing following json", e);
+      }
+    } else if (fileName === 'personal_information.json' || fileName === 'profile_information.json' || fileName === 'account_information.json') {
+      try {
+        const content = await fileData.async('string');
+        const match1 = content.match(/"Username"\s*:\s*\{[^}]*"value"\s*:\s*"([^"]+)"/i);
+        const match2 = content.match(/"username"\s*:\s*"([^"]+)"/i);
+        if (match1 && match1[1]) {
+          ownerUsername = match1[1];
+        } else if (match2 && match2[1]) {
+          ownerUsername = match2[1];
+        }
+      } catch (e) {
+        console.error("Error parsing profile info", e);
+      }
+    } else if (fileName.match(/^(pending|recent)_follow_requests\.json$/)) {
+      try {
+        const content = await fileData.async('string');
+        const json = JSON.parse(content);
+        extractUsersWithTime(json).forEach(u => {
+          pendingRequestsList.push(u);
+        });
+      } catch (e) {
+        console.error("Error parsing pending follow requests", e);
       }
     }
   };
@@ -197,6 +225,27 @@ export const parseInstagramZip = async (file: File): Promise<ParseResult> => {
     followers: seasonalityMap[month]
   }));
 
+  // Jika tidak ditemukan di dalam JSON (misal pengguna hanya mengunduh data followers secara parsial)
+  // Coba ekstrak dari nama file ZIP yang biasanya berformat "instagram-username-tahun-bulan-tanggal..."
+  if (!ownerUsername && file.name) {
+    const match = file.name.match(/^instagram-([^-]+)-/i);
+    if (match && match[1]) {
+      ownerUsername = match[1];
+    } else {
+      // Format lain terkadang username_tanggal.zip
+      const altMatch = file.name.match(/^([a-zA-Z0-9_.]+)_20[0-9]{2}/);
+      if (altMatch && altMatch[1]) {
+        ownerUsername = altMatch[1];
+      }
+    }
+  }
+
+  const oldestFollowers = [...followersList]
+    .filter(f => f.timestamp > 0)
+    .sort((a, b) => a.timestamp - b.timestamp)
+    .slice(0, 5)
+    .map(f => ({ username: obfuscate(f.username), timestamp: f.timestamp }));
+
   return {
     unfollowers: unfollowers.map(obfuscate),
     fans: fans.map(obfuscate),
@@ -207,5 +256,8 @@ export const parseInstagramZip = async (file: File): Promise<ParseResult> => {
     cohortData,
     mutualStats,
     seasonalityData,
+    ownerUsername,
+    oldestFollowers,
+    pendingRequests: pendingRequestsList.map(f => ({ username: obfuscate(f.username), timestamp: f.timestamp }))
   };
 };

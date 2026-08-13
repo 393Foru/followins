@@ -1,54 +1,61 @@
 import { useLanguage } from '@/i18n/LanguageContext';
 import Link from 'next/link';
-import { Camera, Shield, FileText, MessageCircle } from 'lucide-react';
+import { Camera, Shield, FileText, Mail } from 'lucide-react';
 
 export default function Footer() {
   const { t, language } = useLanguage();
   
   return (
-    <footer className="w-full bg-white border-t border-slate-200 mt-20">
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+    <footer className="w-full mt-auto bg-zinc-900 border-t border-zinc-800 py-8 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-8 border-b border-zinc-800 pb-8">
           
           {/* Logo & Slogan */}
-          <div className="flex flex-col items-center md:items-start gap-3">
-            <div className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
-              <Camera className="text-slate-800" size={24} />
-              <span className="font-bold text-xl text-slate-800 tracking-tight">
-                Followins
-              </span>
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+            <div className="bg-emerald-500 text-zinc-950 p-2.5 rounded-xl shadow-sm">
+              <Camera size={28} />
             </div>
-            <p className="text-slate-500 text-sm max-w-xs text-center md:text-left leading-relaxed">
-              {t('footerText')}
-            </p>
+            <div>
+              <span className="font-bold text-2xl tracking-tight text-white font-mono block">
+                FOLLOWINS
+              </span>
+              <p className="text-zinc-400 font-light text-sm mt-1">
+                {t('footerText')}
+              </p>
+            </div>
           </div>
 
           {/* Links */}
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-            <Link href="/privacy" className="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-pink-500 transition-colors">
-              <Shield size={16} />
+          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+            <Link href="/privacy" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors font-medium text-sm group">
+              <Shield size={16} className="text-emerald-500" />
               {t('privacyPolicy')}
             </Link>
-            <Link href="/terms" className="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-pink-500 transition-colors">
-              <FileText size={16} />
+            <Link href="/terms" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors font-medium text-sm group">
+              <FileText size={16} className="text-emerald-500" />
               {t('termsOfService')}
             </Link>
-            <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-green-500 transition-colors">
-              <MessageCircle size={16} />
-              {t('whatsappSupport')}
+            <a href="mailto:amatama.inc@gmail.com" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors font-medium text-sm group">
+              <Mail size={16} className="text-emerald-500" />
+              {t('emailSupport')}
             </a>
           </div>
 
         </div>
         
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-slate-400 text-xs font-medium">
-            © {new Date().getFullYear()} Followins. {language === 'en' ? 'All rights reserved.' : 'Hak Cipta Dilindungi.'}
+        <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-4 font-light text-sm text-zinc-500">
+          <p className="text-center md:text-left">
+            © {new Date().getFullYear()} FOLLOWINS. {language === 'en' ? 'ALL RIGHTS RESERVED.' : 'HAK CIPTA DILINDUNGI.'}
           </p>
-          <p className="text-slate-400 text-xs font-medium">
-            {language === 'en' ? 'A project by' : 'Sebuah proyek dari'} <span className="font-bold text-slate-600">amatama.inc</span>
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="flex items-center gap-2">
+              {language === 'en' ? 'A PROJECT BY' : 'SEBUAH PROYEK DARI'} 
+              <span className="font-medium text-zinc-300 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs">AMATAMA.INC</span>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
