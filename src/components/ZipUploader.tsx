@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback } from 'react';
-import { UploadCloud } from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
+import { UploadCloud, Loader2 } from 'lucide-react';
+import fpPromise from '@fingerprintjs/fingerprintjs';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 interface ZipUploaderProps {
@@ -9,8 +10,62 @@ interface ZipUploaderProps {
 }
 
 export default function ZipUploader({ onFileSelect }: ZipUploaderProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isDragging, setIsDragging] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+
+  const checkLimit = async (): Promise<boolean> => {
+    try {
+      setIsChecking(true);
+      const fp = await fpPromise.load();
+      const result = await fp.get();
+      const visitorId = result.visitorId;
+      
+      // Obfuscate the storage key so it's not obvious
+      const storageKey = btoa(`f_limit_${visitorId}`);
+      const stored = localStorage.getItem(storageKey);
+      
+      const currentMonth = new Date().getMonth();
+      let data = { count: 0, month: currentMonth };
+      
+      if (stored) {
+        try {
+          // simple XOR decryption just to hide it from casual inspection
+          const decoded = atob(stored);
+          let unxored = "";
+          for(let i=0; i<decoded.length; i++) unxored += String.fromCharCode(decoded.charCodeAt(i) ^ 42);
+          const parsed = JSON.parse(unxored);
+          
+          if (parsed.month === currentMonth) {
+            data = parsed;
+          }
+        } catch(e) {}
+      }
+      
+      if (data.count >= 5) {
+        setIsChecking(false);
+        const msg = language === 'en' 
+          ? "You have reached the limit of 5 uploads per month for this device."
+          : "Anda telah mencapai batas maksimal 5 kali upload per bulan untuk perangkat ini.";
+        alert(msg);
+        return false;
+      }
+      
+      data.count += 1;
+      // Re-encode
+      const jsonStr = JSON.stringify(data);
+      let xored = "";
+      for(let i=0; i<jsonStr.length; i++) xored += String.fromCharCode(jsonStr.charCodeAt(i) ^ 42);
+      localStorage.setItem(storageKey, btoa(xored));
+      
+      setIsChecking(false);
+      return true;
+    } catch(e) {
+      console.error(e);
+      setIsChecking(false);
+      return true; // Fail open if fingerprint fails
+    }
+  };
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -22,7 +77,7 @@ export default function ZipUploader({ onFileSelect }: ZipUploaderProps) {
     }
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -30,19 +85,27 @@ export default function ZipUploader({ onFileSelect }: ZipUploaderProps) {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       if (file.name.endsWith('.zip')) {
-        onFileSelect(file);
+        const allowed = await checkLimit();
+        if (allowed) {
+          onFileSelect(file);
+        }
       } else {
         alert(t('uploadError'));
       }
     }
   }, [onFileSelect]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       if (file.name.endsWith('.zip')) {
-        onFileSelect(file);
+        const allowed = await checkLimit();
+        if (allowed) {
+          onFileSelect(file);
+        }
+        // Reset input so the same file can be selected again
+        e.target.value = '';
       } else {
         alert(t('uploadError'));
       }
@@ -82,14 +145,18 @@ export default function ZipUploader({ onFileSelect }: ZipUploaderProps) {
         
         <div className="flex flex-col items-center gap-6 relative z-10 pointer-events-none">
           <div className={`p-4 rounded-xl transition-all duration-300 border ${isDragging ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 scale-110' : 'bg-zinc-900 border-zinc-800 text-zinc-500'}`}>
-            <UploadCloud size={32} strokeWidth={1.5} />
+            {isChecking ? (
+              <Loader2 size={32} strokeWidth={1.5} className="animate-spin text-emerald-500" />
+            ) : (
+              <UploadCloud size={32} strokeWidth={1.5} />
+            )}
           </div>
           <div>
             <p className="text-xl md:text-2xl font-bold text-zinc-200 tracking-tight mb-3 leading-snug">
-              {t('uploadPrompt')}
+              {isChecking ? (language === 'en' ? 'Checking limits...' : 'Mengecek batas...') : t('uploadPrompt')}
             </p>
             <p className="text-zinc-500 font-light max-w-md mx-auto leading-relaxed text-sm md:text-base">
-              {t('uploadDesc')}
+              {isChecking ? '' : t('uploadDesc')}
             </p>
           </div>
         </div>

@@ -12,14 +12,17 @@ interface UserTableProps {
   unfollowers: string[];
   fans: string[];
   ownerUsername: string;
+  isPremium: boolean;
+  onUnlock: () => void;
+  totalUnfollowersCount: number;
+  totalFansCount: number;
 }
 
-export default function UserTable({ unfollowers, fans, ownerUsername }: UserTableProps) {
+export default function UserTable({ unfollowers, fans, ownerUsername, isPremium, onUnlock, totalUnfollowersCount, totalFansCount }: UserTableProps) {
   const { t, formatCompactNumber, language } = useLanguage();
   
   const [activeTab, setActiveTab] = useState<'unfollowers' | 'fans'>('unfollowers');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
   
   const [labels, setLabels] = useState<Record<string, string>>({});
   const [editingUser, setEditingUser] = useState<string | null>(null);
@@ -32,25 +35,8 @@ export default function UserTable({ unfollowers, fans, ownerUsername }: UserTabl
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"random" | "asc" | "desc">("random");
 
-  // Fixed Subsets for Free Tier (so they don't replenish when labeled/filtered)
-  const [freeUnfollowers, setFreeUnfollowers] = useState<string[]>([]);
-  const [freeFans, setFreeFans] = useState<string[]>([]);
-
-  useEffect(() => {
-    // Deterministic pseudo-random sort using hash to prevent refresh loopholes
-    const hashString = (str: string) => {
-      let hash = 0;
-      const combined = str + ownerUsername;
-      for (let i = 0; i < combined.length; i++) {
-        hash = ((hash << 5) - hash) + combined.charCodeAt(i);
-        hash |= 0; // Convert to 32bit integer
-      }
-      return hash;
-    };
-
-    setFreeUnfollowers([...unfollowers].sort((a, b) => hashString(a) - hashString(b)).slice(0, 100));
-    setFreeFans([...fans].sort((a, b) => hashString(a) - hashString(b)).slice(0, 100));
-  }, [unfollowers, fans, ownerUsername]);
+  // Subsets are handled by the parent component now
+  // We use unfollowers and fans directly as they are already filtered if not premium
 
   useEffect(() => {
     if (ownerUsername) {
@@ -74,10 +60,7 @@ export default function UserTable({ unfollowers, fans, ownerUsername }: UserTabl
   };
 
   const currentList = activeTab === 'unfollowers' ? unfollowers : fans;
-  
-  const baseList = isPremium 
-    ? currentList 
-    : (activeTab === 'unfollowers' ? freeUnfollowers : freeFans);
+  const baseList = currentList; // The parent already truncates if not premium
   
   const filteredList = useMemo(() => {
     let list = [...baseList];
@@ -123,7 +106,8 @@ export default function UserTable({ unfollowers, fans, ownerUsername }: UserTabl
     return Array.from(new Set(Object.values(labels).filter(l => l.trim() !== '')));
   }, [labels]);
   
-  const totalHidden = Math.max(0, currentList.length - baseList.length);
+  const currentTotalCount = activeTab === 'unfollowers' ? totalUnfollowersCount : totalFansCount;
+  const totalHidden = Math.max(0, currentTotalCount - currentList.length);
   
   const displayList = useMemo(() => {
     let listToSort = [...filteredList];
@@ -193,8 +177,8 @@ export default function UserTable({ unfollowers, fans, ownerUsername }: UserTabl
   };
 
   const handlePaymentSuccess = () => {
-    setIsPremium(true);
     setIsModalOpen(false);
+    onUnlock();
   };
 
   return (
@@ -207,7 +191,7 @@ export default function UserTable({ unfollowers, fans, ownerUsername }: UserTabl
           }`}
           onClick={() => handleTabChange('unfollowers')}
         >
-          Unfollowers <span className="font-mono text-sm text-zinc-400 ml-1">({formatCompactNumber(unfollowers.length)})</span>
+          Unfollowers <span className="font-mono text-sm text-zinc-400 ml-1">({formatCompactNumber(totalUnfollowersCount)})</span>
         </button>
         <button
           className={`flex-1 py-5 text-center font-bold text-lg md:text-xl transition-colors ${
@@ -215,7 +199,7 @@ export default function UserTable({ unfollowers, fans, ownerUsername }: UserTabl
           }`}
           onClick={() => handleTabChange('fans')}
         >
-          Fans <span className="font-mono text-sm text-teal-400 ml-1">({formatCompactNumber(fans.length)})</span>
+          Fans <span className="font-mono text-sm text-teal-400 ml-1">({formatCompactNumber(totalFansCount)})</span>
         </button>
       </div>
       
@@ -402,25 +386,26 @@ export default function UserTable({ unfollowers, fans, ownerUsername }: UserTabl
                           target="_blank" 
                           rel="noreferrer" 
                           onClick={(e) => {
-                            if (!isPremium) {
-                              const today = new Date().toISOString().split('T')[0];
-                              const key = `followins_clicked_users_${today}`;
-                              let clickedUsers: string[] = [];
-                              try {
-                                clickedUsers = JSON.parse(localStorage.getItem(key) || '[]');
-                              } catch (err) {}
-                              
-                              const hasClickedBefore = clickedUsers.includes(user);
-                              
-                              if (!hasClickedBefore && clickedUsers.length >= 10) {
-                                e.preventDefault();
-                                setIsModalOpen(true);
-                              } else if (!hasClickedBefore) {
-                                clickedUsers.push(user);
-                                localStorage.setItem(key, JSON.stringify(clickedUsers));
+                              if (!isPremium) {
+                                const today = new Date().toISOString().split('T')[0];
+                                const key = `followins_clicked_users_${today}`;
+                                let clickedUsers: string[] = [];
+                                try {
+                                  // We use sessionStorage to enforce session-based limits for free users, harder to bypass permanently
+                                  clickedUsers = JSON.parse(sessionStorage.getItem(key) || '[]');
+                                } catch (err) {}
+                                
+                                const hasClickedBefore = clickedUsers.includes(user);
+                                
+                                if (!hasClickedBefore && clickedUsers.length >= 10) {
+                                  e.preventDefault();
+                                  setIsModalOpen(true);
+                                } else if (!hasClickedBefore) {
+                                  clickedUsers.push(user);
+                                  sessionStorage.setItem(key, JSON.stringify(clickedUsers));
+                                }
                               }
-                            }
-                          }}
+                            }}
                           className="block text-sm md:text-base font-medium text-zinc-800 hover:text-teal-600 font-mono truncate transition-colors"
                         >
                           @{user}

@@ -27,6 +27,8 @@ import PendingRequests from '@/components/PendingRequests';
 import { parseInstagramZip, ParseResult } from '@/utils/instagramParser';
 import { saveHistory, HistoryRecord, saveLastScanData, getLastScanData } from '@/utils/storage';
 
+let secureCache: { unfollowers: string[], fans: string[], mutuals: string[], newUnfollowers: string[], kutuLoncat: string[] } | null = null;
+
 export default function Home() {
   const { t, language } = useLanguage();
   const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle');
@@ -38,6 +40,21 @@ export default function Home() {
   const [newUnfollowers, setNewUnfollowers] = useState<string[]>([]);
   const [kutuLoncat, setKutuLoncat] = useState<string[]>([]);
   const [isFirstScan, setIsFirstScan] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+
+  const handleUnlock = () => {
+    setIsPremium(true);
+    if (secureCache && result) {
+      setResult({
+        ...result,
+        unfollowers: secureCache.unfollowers,
+        fans: secureCache.fans,
+        mutuals: secureCache.mutuals
+      });
+      setNewUnfollowers(secureCache.newUnfollowers);
+      setKutuLoncat(secureCache.kutuLoncat);
+    }
+  };
 
   const resetApp = () => {
     setStatus('idle');
@@ -51,9 +68,23 @@ export default function Home() {
         const session = JSON.parse(stored);
         if (session && session.result) {
           setIsDemo(false);
-          setResult(session.result);
-          setNewUnfollowers(session.newUnfollowers || []);
-          setKutuLoncat(session.kutuLoncat || []);
+          secureCache = {
+            unfollowers: session.result.unfollowers,
+            fans: session.result.fans,
+            mutuals: session.result.mutuals,
+            newUnfollowers: session.newUnfollowers || [],
+            kutuLoncat: session.kutuLoncat || []
+          };
+
+          const dataForState = { ...session.result };
+          if (!isPremium) {
+            dataForState.unfollowers = session.result.unfollowers.slice(0, 100);
+            dataForState.fans = session.result.fans.slice(0, 100);
+          }
+
+          setResult(dataForState);
+          setNewUnfollowers(!isPremium ? (session.newUnfollowers || []).slice(0, 100) : (session.newUnfollowers || []));
+          setKutuLoncat(!isPremium ? (session.kutuLoncat || []).slice(0, 100) : (session.kutuLoncat || []));
           setIsFirstScan(session.isFirstScan || false);
           setStatus('done');
         }
@@ -118,16 +149,33 @@ export default function Home() {
         ]
       };
       
-      setResult(demoData);
-      setNewUnfollowers(["unfollower_user_0", "unfollower_user_1", "unfollower_user_2", "unfollower_user_3"]);
-      setKutuLoncat(["unfollower_user_1", "unfollower_user_3"]);
+      const allNewUnf = ["unfollower_user_0", "unfollower_user_1", "unfollower_user_2", "unfollower_user_3"];
+      const allKutu = ["unfollower_user_1", "unfollower_user_3"];
+      
+      secureCache = {
+        unfollowers: demoData.unfollowers,
+        fans: demoData.fans,
+        mutuals: demoData.mutuals,
+        newUnfollowers: allNewUnf,
+        kutuLoncat: allKutu
+      };
+
+      const dataForState = { ...demoData };
+      if (!isPremium) {
+        dataForState.unfollowers = demoData.unfollowers.slice(0, 100);
+        dataForState.fans = demoData.fans.slice(0, 100);
+      }
+      
+      setResult(dataForState as any);
+      setNewUnfollowers(!isPremium ? allNewUnf.slice(0, 100) : allNewUnf);
+      setKutuLoncat(!isPremium ? allKutu.slice(0, 100) : allKutu);
       setIsFirstScan(false);
       
       try {
         localStorage.setItem('followins_latest_session', JSON.stringify({
           result: demoData,
-          newUnfollowers: ["unfollower_user_0", "unfollower_user_1", "unfollower_user_2", "unfollower_user_3"],
-          kutuLoncat: ["unfollower_user_1", "unfollower_user_3"],
+          newUnfollowers: allNewUnf,
+          kutuLoncat: allKutu,
           isFirstScan: false
         }));
       } catch(e) {}
@@ -173,10 +221,29 @@ export default function Home() {
       setIsFirstScan(true);
     }
     
-    // Save current data for next scan
+    // 1. Simpan original ke cache memori (anti F12)
+    secureCache = {
+      unfollowers: data.unfollowers,
+      fans: data.fans,
+      mutuals: data.mutuals,
+      newUnfollowers: finalNewUnf,
+      kutuLoncat: finalKutuLoncat
+    };
+
+    // 2. Buat versi terpotong untuk React State jika gratisan
+    const dataForState = { ...data };
+    if (!isPremium) {
+      dataForState.unfollowers = data.unfollowers.slice(0, 100);
+      dataForState.fans = data.fans.slice(0, 100);
+    }
+    
+    setNewUnfollowers(!isPremium ? finalNewUnf.slice(0, 100) : finalNewUnf);
+    setKutuLoncat(!isPremium ? finalKutuLoncat.slice(0, 100) : finalKutuLoncat);
+    
+    // Save current data for next scan (this uses original full data thanks to ParseResult being the full object originally)
     saveLastScanData(trackerUsername, data.unfollowers, data.fans, data.mutuals);
     
-    setResult(data);
+    setResult(dataForState);
     
     // Simpan ke LocalStorage dan dapatkan riwayat lengkap
     const newHistory = saveHistory({
@@ -187,8 +254,9 @@ export default function Home() {
     setHistory(newHistory);
     
     try {
+      // Selalu simpan full data ke LocalStorage, terenkripsi via crypto.ts
       localStorage.setItem('followins_latest_session', JSON.stringify({
-        result: data,
+        result: data, // data is the original full ParseResult here
         newUnfollowers: finalNewUnf,
         kutuLoncat: finalKutuLoncat,
         isFirstScan: finalIsFirstScan
@@ -395,18 +463,18 @@ export default function Home() {
             
             <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full">
               <MetricCards 
-                unfollowers={result.unfollowers.length}
-                fans={result.fans.length}
-                mutuals={result.mutuals.length}
+                unfollowers={result.totalUnfollowersCount || result.unfollowers.length}
+                fans={result.totalFansCount || result.fans.length}
+                mutuals={result.followersCount > 0 ? (result.totalFansCount ? result.followersCount - result.totalFansCount : result.mutuals.length) : 0}
               />
             </motion.div>
 
             <div className="w-full flex flex-col lg:flex-row gap-5 items-stretch">
               <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
                 <RelationshipPieChart 
-                  unfollowers={result.unfollowers.length}
-                  fans={result.fans.length}
-                  mutuals={result.mutuals.length}
+                  unfollowers={result.totalUnfollowersCount || result.unfollowers.length}
+                  fans={result.totalFansCount || result.fans.length}
+                  mutuals={result.followersCount > 0 ? (result.totalFansCount ? result.followersCount - result.totalFansCount : result.mutuals.length) : 0}
                 />
               </motion.div>
               
@@ -450,6 +518,10 @@ export default function Home() {
                 unfollowers={result.unfollowers}
                 fans={result.fans}
                 ownerUsername={result.ownerUsername || 'my_account'}
+                isPremium={isPremium}
+                onUnlock={handleUnlock}
+                totalUnfollowersCount={result.totalUnfollowersCount || result.unfollowers.length}
+                totalFansCount={result.totalFansCount || result.fans.length}
               />
             </motion.div>
           </div>

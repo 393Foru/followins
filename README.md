@@ -14,6 +14,7 @@ Followins is a privacy-first Instagram followers tracker that works 100% on the 
 - **💎 Premium Design:** Clean, modern interface with interactive landing page sections and dedicated Legal pages (Terms, Privacy), built with Tailwind CSS and Framer Motion.
 - **🛡️ Secure Freemium Model:** Uses Client-Side encryption combined with an API mockup to secure premium data until a valid payment is made.
 - **🕵️ Anti-F12 Protection:** Advanced DOM rendering ensures hidden premium data cannot be scraped via DevTools by injecting skeleton dummy data.
+- **🛑 Advanced Rate Limiting:** Prevents spam and abuse by tracking device fingerprints securely to limit file uploads per month without needing user accounts.
 - **🚨 Smart Alerts:** Automatically detect new unfollowers and identify "Hit & Run" accounts across different scans.
 - **📈 Advanced Insights:** Discover your most loyal followers, pending follow requests, and monitor your account's health ratio.
 

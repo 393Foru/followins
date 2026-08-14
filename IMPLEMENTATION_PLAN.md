@@ -27,9 +27,9 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 - [x] Peningkatan *UserTable* (Mini CRM): Tambahkan fitur Label/Tagging akun berwarna, Bulk Actions, fungsi Pencarian (Search), dan Penyortiran (Sort).
 
 ## Tahap 4: Sistem Bisnis (Rate Limit & Paywall)
-- [ ] Buat Next.js API Route untuk mencatat batas harian IP (sementara gunakan memori lokal sebelum beralih ke Redis).
+- [x] **Rate Limiting:** Integrasikan `FingerprintJS` untuk mendeteksi ID perangkat (*visitorId*) secara *client-side* dan berikan pembatasan maksimal 5 kali unggah ZIP per bulan per perangkat pada komponen `ZipUploader.tsx`.
 - [x] Buat komponen `PaywallModal.tsx` dengan UI *mock-up* pembayaran QRIS.
-- [x] **Keamanan Paywall (Anti-F12):** Terapkan pencegahan *Inspect Element* dengan hanya me-render 100 data acak terdekripsi ke DOM, dan sisanya digantikan dengan *Skeleton Dummy Data* hingga pembayaran berhasil.
+- [x] **Keamanan Paywall (Anti-F12):** Terapkan pencegahan *Inspect Element* dengan hanya me-render 100 data acak terdekripsi ke DOM, dan sisanya digantikan dengan *Skeleton Dummy Data* hingga pembayaran berhasil. (Dilengkapi dengan enkripsi XOR Cipher + Base64 pada `crypto.ts`).
 - [x] **Monetisasi Mikro:** Kunci fitur Sortir Abjad dan batasi klik tautan profil eksternal (maksimal 10 profil unik per hari) di dalam `UserTable` untuk pengguna gratis.
 
 ## Tahap 5: Standar Produksi (Keamanan, SEO & Support)
