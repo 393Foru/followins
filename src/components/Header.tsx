@@ -1,11 +1,13 @@
 "use client";
 
-import { Camera, Globe, ArrowUpCircle } from 'lucide-react';
+import { Camera, Globe, ArrowUpCircle, Moon, Sun } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useTheme } from '@/components/ThemeContext';
 import { usePathname, useRouter } from 'next/navigation';
 
 export default function Header() {
   const { t, toggleLanguage } = useLanguage();
+  const { isDark, toggleTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -30,7 +32,7 @@ export default function Header() {
   };
 
   return (
-    <header className="flex items-center justify-between p-4 md:px-12 bg-white sticky top-0 z-50 border-b border-zinc-200 h-20 shadow-sm">
+    <header className="flex items-center justify-between p-4 md:px-12 bg-white sticky top-0 z-50 border-b border-zinc-200 h-20 shadow-sm transition-colors duration-300">
       <div className="flex items-center gap-3 cursor-pointer group" onClick={scrollToTop}>
         <div className="bg-zinc-900 text-white p-2 rounded-lg shadow-sm group-hover:bg-zinc-800 transition-colors">
           <Camera size={28} />
@@ -53,7 +55,15 @@ export default function Header() {
         </button>
       </nav>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 md:gap-6">
+        <button 
+          onClick={toggleTheme}
+          className="flex items-center justify-center w-10 h-10 text-zinc-600 hover:bg-zinc-100 rounded-lg transition-colors hover:text-zinc-900"
+          title="Toggle Dark Mode"
+        >
+          {isDark ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+
         <button 
           onClick={toggleLanguage}
           className="flex items-center gap-2 text-sm font-medium text-zinc-600 px-3 py-2 hover:bg-zinc-100 rounded-lg transition-colors hover:text-zinc-900"

@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/i18n/LanguageContext';
 import Link from 'next/link';
+import EmailSupportLink from '@/components/EmailSupportLink';
 
 export default function PrivacyPolicy() {
   const { language } = useLanguage();
@@ -48,7 +49,7 @@ export default function PrivacyPolicy() {
                 <p>Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Kami akan memberi tahu Anda tentang setiap perubahan dengan memposting Kebijakan Privasi baru di halaman ini. Anda disarankan untuk meninjau Kebijakan Privasi ini secara berkala untuk setiap perubahan.</p>
 
                 <h2 className="text-xl font-bold text-white mt-8 mb-4 text-left">7. Hubungi Kami</h2>
-                <p>Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui <a href="mailto:amatama.inc@gmail.com" className="text-emerald-500 hover:text-emerald-400 underline font-medium">Email Support</a> kami.</p>
+                <p>Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui <EmailSupportLink /> kami.</p>
               </div>
             ) : (
               <div className="space-y-6 text-zinc-400 leading-relaxed text-justify">
@@ -81,7 +82,7 @@ export default function PrivacyPolicy() {
                 <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
 
                 <h2 className="text-xl font-bold text-white mt-8 mb-4 text-left">7. Contact Us</h2>
-                <p>If you have any questions about this Privacy Policy, please contact us via our <a href="mailto:amatama.inc@gmail.com" className="text-emerald-500 hover:text-emerald-400 underline font-medium">Email Support</a>.</p>
+                <p>If you have any questions about this Privacy Policy, please contact us via our <EmailSupportLink />.</p>
               </div>
             )}
             

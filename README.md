@@ -7,6 +7,8 @@ Followins is a privacy-first Instagram followers tracker that works 100% on the 
 - **🔒 100% Client-Side Privacy:** All data parsing (ZIP extraction and JSON processing) happens in your browser's memory. No Instagram data is ever sent to our servers.
 - **📊 Advanced Analytics:** Visualizes your follower growth, mutuals, fans, and unfollowers using modern charts (Growth, Relationship, Cohort, etc).
 - **👀 Live Demo Mode:** Experience the full dashboard with sample data before uploading your own ZIP file.
+- **🏷️ Mini CRM System:** Add custom colored labels to accounts, perform bulk actions, search, and organize your follower lists.
+- **🌓 Dark Mode Support:** Seamlessly switch between elegant light and dark themes.
 - **🕰️ Local History:** Instantly view your latest insights without re-uploading, using secure LocalStorage.
 - **🌍 Bilingual Support:** Available in both English and Indonesian, powered by React Context API.
 - **💎 Premium Design:** Clean, modern interface with interactive landing page sections and dedicated Legal pages (Terms, Privacy), built with Tailwind CSS and Framer Motion.

@@ -23,12 +23,14 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 - [x] Peningkatan Dashboard Analytics: Tambahkan komponen pendeteksi Unfollowers Baru & "Kutu Loncat" (menggunakan komparasi sesi), daftar Pengikut Setia (Loyal Followers), Permintaan Menggantung (Pending Requests), dan Skor Kesehatan Akun (Account Health Ratio).
 - [x] Implementasikan `MetricCards.tsx` (Jumlah followers/unfollowers).
 - [x] Implementasikan `GrowthChart.tsx` dan fitur visualisasi lainnya (Cohort, Seasonality Radar, dll).
-- [x] Implementasikan `UserTable.tsx` (Menampilkan maksimal 100 akun yang dipilih secara **acak** untuk versi gratis. Setelah berbayar, tampilkan semua akun yang diurutkan abjad tanpa batas 100 akun).
+- [x] Implementasikan `UserTable.tsx` (Menampilkan maksimal 100 akun yang dipilih secara **acak** untuk versi gratis).
+- [x] Peningkatan *UserTable* (Mini CRM): Tambahkan fitur Label/Tagging akun berwarna, Bulk Actions, fungsi Pencarian (Search), dan Penyortiran (Sort).
 
 ## Tahap 4: Sistem Bisnis (Rate Limit & Paywall)
 - [ ] Buat Next.js API Route untuk mencatat batas harian IP (sementara gunakan memori lokal sebelum beralih ke Redis).
 - [x] Buat komponen `PaywallModal.tsx` dengan UI *mock-up* pembayaran QRIS.
 - [x] **Keamanan Paywall (Anti-F12):** Terapkan pencegahan *Inspect Element* dengan hanya me-render 100 data acak terdekripsi ke DOM, dan sisanya digantikan dengan *Skeleton Dummy Data* hingga pembayaran berhasil.
+- [x] **Monetisasi Mikro:** Kunci fitur Sortir Abjad dan batasi klik tautan profil eksternal (maksimal 10 profil unik per hari) di dalam `UserTable` untuk pengguna gratis.
 
 ## Tahap 5: Standar Produksi (Keamanan, SEO & Support)
 - [x] **Error Handling:** Tambahkan logika pengecekan ekstensi file (harus `.zip`) dan batas maksimal ukuran (100MB) pada `ZipUploader.tsx`.
@@ -36,6 +38,8 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 - [ ] **SEO & Shareability:** Konfigurasi `Metadata` dan *Open Graph (OG Tags)* di `layout.tsx` agar terlihat premium saat tautan web dibagikan.
 - [ ] **Anti-Bot:** Pasang pelindung transparan (*Cloudflare Turnstile*) di area upload untuk mencegah *spam request*.
 - [x] **Bilingual (i18n):** Siapkan dukungan dua bahasa (Indonesia/Inggris) untuk menjangkau pengguna global (`LanguageContext.tsx`).
+- [x] **Dark Mode:** Terapkan dukungan tema Gelap/Terang via `ThemeContext.tsx`.
+- [x] **Dukungan Bantuan:** Buat komponen `EmailSupportLink.tsx` terpusat untuk halaman Footer dan halaman Legal.
 - [ ] **PWA Support:** Konfigurasikan *Progressive Web App* agar website bisa diinstal ke *Home Screen* HP.
 - [ ] **Multi-Account Reset:** Tambahkan fungsi bersihkan *cache* untuk memungkinkan pengguna mengecek akun lain tanpa *reload*.
 - [ ] Lakukan End-to-End (E2E) Test keseluruhan alur dari *upload* hingga simulasi pembayaran.

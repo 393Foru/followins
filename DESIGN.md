@@ -4,15 +4,16 @@
 Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Client-Side) dan menggunakan file ekspor resmi Instagram (.zip) untuk akurasi mutlak tanpa perlu login akun.
 
 ## 2. Tema Visual (UI/UX)
-- **Tema Utama:** Light Mode (Terang) dengan sentuhan minimalis, bayangan halus (soft shadow), dan *whitespace* yang lega untuk memberikan kesan *Premium* layaknya aplikasi modern.
+- **Tema Utama:** Dukungan Dual Theme (Light & Dark Mode) via setelan lokal `ThemeContext`. Desainnya mengusung sentuhan minimalis, bayangan halus (soft shadow), dan *whitespace* yang lega layaknya aplikasi premium modern.
 - **Warna Aksen:** Palet elegan berbasis `Zinc` (abu-abu gelap) untuk kerangka utama, dikombinasikan dengan aksen warna solid (Emerald, Amber, Blue, Pink) untuk tombol dan indikator status.
 - **Tipografi:** *Inter* atau *Geist* (Modern, bersih, mudah dibaca).
 - **Aset Visual:** Penggunaan gambar latar estetik (`cloud-bg.jpg`, `3d-zip.jpg`) untuk memberikan kesan 3D yang imersif pada area hero dan *uploader*.
 
 ## 3. Komponen Utama & Halaman (Routes)
 - **Komponen Global:**
-  - **`Header.tsx`:** Bilah navigasi atas yang berisi Logo dan tombol *Toggle Language* (ID/EN) menggunakan `LanguageContext`.
-  - **`Footer.tsx`:** Bilah bawah berisi tautan *Privacy Policy*, *Terms of Service*, dan bantuan.
+  - **`Header.tsx`:** Bilah navigasi atas yang berisi Logo, tombol *Toggle Language* (ID/EN), dan tombol *Toggle Theme* (Light/Dark).
+  - **`Footer.tsx`:** Bilah bawah berisi tautan *Privacy Policy*, *Terms of Service*, dan `EmailSupportLink.tsx`.
+  - **Contexts:** `LanguageContext.tsx` untuk lokalisasi, dan `ThemeContext.tsx` untuk persistensi tema gelap/terang.
 - **`/` (Landing Page):**
   - **Hero Section:** Penjelasan singkat yang persuasif.
   - **`Features.tsx` & `HowItWorks.tsx`:** Penjelasan nilai jual dan cara penggunaan alat secara visual.
@@ -30,7 +31,13 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
     - **`RelationshipPieChart.tsx`:** Proporsi pengikut vs yang tidak mengikuti balik.
     - **`CohortChart.tsx`:** Retensi followers.
     - **`SeasonalityRadar.tsx`:** Aktivitas atau rasio followers berdasarkan tipe/waktu (mockup visualisai kompleks).
-  - **`UserTable.tsx`:** Menampilkan nama-nama akun yang di-filter berdasarkan status. Pada versi gratis dibatasi maksimal 100 akun; sisa data disembunyikan total dari DOM menggunakan *Skeleton Dummy Data* untuk mencegah eksploitasi *Inspect Element* (Anti-F12).
+  - **`UserTable.tsx`:** Tabel canggih yang berfungsi sebagai Mini CRM. Fiturnya meliputi:
+    - Labeling/Tagging warna-warni pada tiap akun (`labelColors.ts`).
+    - Bulk Actions untuk pelabelan massal.
+    - Fungsi Pencarian (*Search*) dan Filter.
+    - Penyortiran (terkunci Paywall untuk *Asc/Desc*).
+    - Batasan klik profil (maks 10 profil unik/hari untuk versi gratis).
+    - Sisa data disembunyikan menggunakan *Skeleton Dummy Data* (Anti-F12).
 - **`PaywallModal.tsx`:**
   - Dirender menggunakan `createPortal` pada level tertinggi DOM. Muncul ketika pengguna ingin membuka batasan freemium untuk melihat seluruh akun. Menampilkan simulasi UI pembayaran QRIS yang interaktif.
 - **Halaman Legal Statis:**

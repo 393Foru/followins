@@ -5,7 +5,7 @@ export const obfuscate = (text: string): string => {
   if (typeof window !== 'undefined') {
     return btoa(encodeURIComponent(text));
   }
-  // Fallback untuk SSR/Server environment (meski app kita client-side)
+  // Fallback untuk SSR/Server environment (meski app client-side)
   return Buffer.from(encodeURIComponent(text)).toString('base64');
 };
 

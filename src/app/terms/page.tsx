@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/i18n/LanguageContext';
 import Link from 'next/link';
+import EmailSupportLink from '@/components/EmailSupportLink';
 
 export default function TermsAndConditions() {
   const { language } = useLanguage();
@@ -43,7 +44,7 @@ export default function TermsAndConditions() {
                 <p>Kami berhak untuk memodifikasi atau mengganti Syarat dan Ketentuan ini kapan saja. Anda diharapkan untuk memeriksa halaman ini secara berkala untuk mengetahui perubahan apa pun. Penggunaan berkelanjutan atas layanan kami setelah modifikasi apa pun merupakan penerimaan Anda terhadap syarat yang baru.</p>
 
                 <h2 className="text-xl font-bold text-white mt-8 mb-4 text-left">7. Hubungi Kami</h2>
-                <p>Jika Anda memiliki pertanyaan terkait Syarat dan Ketentuan ini, silakan hubungi kami melalui <a href="mailto:amatama.inc@gmail.com" className="text-emerald-500 hover:text-emerald-400 underline font-medium">Email Support</a> kami.</p>
+                <p>Jika Anda memiliki pertanyaan terkait Syarat dan Ketentuan ini, silakan hubungi kami melalui <EmailSupportLink /> kami.</p>
               </div>
             ) : (
               <div className="space-y-6 text-zinc-400 leading-relaxed text-justify">
@@ -71,7 +72,7 @@ export default function TermsAndConditions() {
                 <p>We reserve the right to modify or replace these Terms and Conditions at any time. You are expected to check this page periodically to become aware of any changes. Your continued use of our service after any modification constitutes your acceptance of the new terms.</p>
 
                 <h2 className="text-xl font-bold text-white mt-8 mb-4 text-left">7. Contact Us</h2>
-                <p>If you have any questions regarding these Terms and Conditions, please contact us via our <a href="mailto:amatama.inc@gmail.com" className="text-emerald-500 hover:text-emerald-400 underline font-medium">Email Support</a>.</p>
+                <p>If you have any questions regarding these Terms and Conditions, please contact us via our <EmailSupportLink />.</p>
               </div>
             )}
             

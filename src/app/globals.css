@@ -17,3 +17,59 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* Dark Mode Overrides for Tailwind Utility Classes */
+.dark body {
+  background-color: #09090b !important; /* zinc-950 */
+  color: #f8fafc !important; /* slate-50 */
+}
+
+/* Components */
+.dark .bg-white { background-color: #18181b !important; /* zinc-900 */ }
+.dark .bg-zinc-50 { background-color: #09090b !important; }
+.dark .bg-zinc-100 { background-color: #27272a !important; }
+.dark .bg-zinc-800 { background-color: #27272a !important; }
+.dark .bg-zinc-900 { background-color: #000000 !important; }
+
+/* Text */
+.dark .text-zinc-900 { color: #f4f4f5 !important; }
+.dark .text-zinc-800 { color: #e4e4e7 !important; }
+.dark .text-zinc-700 { color: #d4d4d8 !important; }
+.dark .text-zinc-600 { color: #a1a1aa !important; }
+.dark .text-zinc-500 { color: #71717a !important; }
+
+/* Borders */
+.dark .border-zinc-200 { border-color: #27272a !important; /* zinc-800 */ }
+.dark .border-zinc-300 { border-color: #3f3f46 !important; }
+.dark .border-b-zinc-200 { border-bottom-color: #27272a !important; }
+.dark .border-r-zinc-200 { border-right-color: #27272a !important; }
+
+/* Hover States */
+.dark .hover\:bg-zinc-100:hover { background-color: #27272a !important; }
+.dark .hover\:bg-zinc-50:hover { background-color: #18181b !important; }
+.dark .hover\:text-zinc-900:hover { color: #ffffff !important; }
+.dark .hover\:border-zinc-300:hover { border-color: #52525b !important; }
+
+/* Keep Teal bright */
+.dark .text-teal-600 { color: #2dd4bf !important; } /* teal-400 */
+.dark .bg-teal-50\/10 { background-color: rgba(45, 212, 191, 0.1) !important; }
+
+/* Custom alert overrides for dark mode */
+.dark .dark-no-gradient { background-image: none !important; border-color: #27272a !important; }
+.dark .dark-title { color: #f4f4f5 !important; }
+.dark .dark-desc { color: #a1a1aa !important; }
+.dark .dark-icon-indigo { background-color: rgba(99, 102, 241, 0.1) !important; color: #818cf8 !important; border-color: rgba(99, 102, 241, 0.2) !important; }
+.dark .dark-icon-emerald { background-color: rgba(16, 185, 129, 0.1) !important; color: #34d399 !important; border-color: rgba(16, 185, 129, 0.2) !important; }
+.dark .dark-icon-rose { background-color: rgba(244, 63, 94, 0.1) !important; color: #f43f5e !important; border-color: rgba(244, 63, 94, 0.2) !important; }
+.dark .dark-icon-blue { background-color: rgba(59, 130, 246, 0.1) !important; color: #60a5fa !important; border-color: rgba(59, 130, 246, 0.2) !important; }
+.dark .dark-button-rose { background-color: rgba(244, 63, 94, 0.1) !important; color: #f43f5e !important; border-color: rgba(244, 63, 94, 0.3) !important; }
+.dark .dark-button-rose:hover { background-color: rgba(244, 63, 94, 0.2) !important; }
+.dark .dark-button-blue { background-color: rgba(59, 130, 246, 0.1) !important; color: #60a5fa !important; border-color: rgba(59, 130, 246, 0.3) !important; }
+.dark .dark-button-blue:hover { background-color: rgba(59, 130, 246, 0.2) !important; }

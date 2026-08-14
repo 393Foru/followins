@@ -1,6 +1,7 @@
 import { useLanguage } from '@/i18n/LanguageContext';
 import Link from 'next/link';
 import { Camera, Shield, FileText, Mail } from 'lucide-react';
+import EmailSupportLink from './EmailSupportLink';
 
 export default function Footer() {
   const { t, language } = useLanguage();
@@ -37,10 +38,10 @@ export default function Footer() {
               <FileText size={16} className="text-emerald-500" />
               {t('termsOfService')}
             </Link>
-            <a href="mailto:amatama.inc@gmail.com" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors font-medium text-sm group">
-              <Mail size={16} className="text-emerald-500" />
-              {t('emailSupport')}
-            </a>
+            <EmailSupportLink 
+              className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors font-medium text-sm group" 
+              showIcon={true} 
+            />
           </div>
 
         </div>

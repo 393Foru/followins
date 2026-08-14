@@ -89,3 +89,29 @@ export const getLastScanData = (username: string): LastScanData | null => {
   }
   return null;
 };
+
+export const getUserLabels = (ownerUsername: string): Record<string, string> => {
+  if (typeof window === 'undefined' || !ownerUsername) return {};
+  const existingStr = localStorage.getItem(`followins_labels_${ownerUsername}`);
+  if (existingStr) {
+    try {
+      return JSON.parse(existingStr);
+    } catch (e) {
+      return {};
+    }
+  }
+  return {};
+};
+
+export const saveUserLabel = (ownerUsername: string, targetUser: string, label: string) => {
+  if (typeof window === 'undefined' || !ownerUsername || !targetUser) return;
+  const labels = getUserLabels(ownerUsername);
+  
+  if (label.trim() === '') {
+    delete labels[targetUser];
+  } else {
+    labels[targetUser] = label.trim();
+  }
+  
+  localStorage.setItem(`followins_labels_${ownerUsername}`, JSON.stringify(labels));
+};

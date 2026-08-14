@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { ShieldCheck, Zap, Lock } from 'lucide-react';
+import { ShieldCheck, Zap, Lock, Printer, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import Header from '@/components/Header';
@@ -39,12 +39,36 @@ export default function Home() {
   const [kutuLoncat, setKutuLoncat] = useState<string[]>([]);
   const [isFirstScan, setIsFirstScan] = useState(false);
 
+  const resetApp = () => {
+    setStatus('idle');
+    setIsDemo(false);
+  };
+
+  const handleRestore = () => {
+    try {
+      const stored = localStorage.getItem('followins_latest_session');
+      if (stored) {
+        const session = JSON.parse(stored);
+        if (session && session.result) {
+          setIsDemo(false);
+          setResult(session.result);
+          setNewUnfollowers(session.newUnfollowers || []);
+          setKutuLoncat(session.kutuLoncat || []);
+          setIsFirstScan(session.isFirstScan || false);
+          setStatus('done');
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleDemo = () => {
     setIsDemo(true);
     setStatus('loading');
     
     setTimeout(() => {
-      setResult({
+      const demoData = {
         ownerUsername: "demo_user",
         unfollowers: Array.from({ length: 42 }).map((_, i) => `unfollower_user_${i}`),
         fans: Array.from({ length: 128 }).map((_, i) => `fan_user_${i}`),
@@ -92,10 +116,22 @@ export default function Home() {
           { month: "Nov", followers: 60 },
           { month: "Des", followers: 105 }
         ]
-      });
+      };
+      
+      setResult(demoData);
       setNewUnfollowers(["unfollower_user_0", "unfollower_user_1", "unfollower_user_2", "unfollower_user_3"]);
       setKutuLoncat(["unfollower_user_1", "unfollower_user_3"]);
       setIsFirstScan(false);
+      
+      try {
+        localStorage.setItem('followins_latest_session', JSON.stringify({
+          result: demoData,
+          newUnfollowers: ["unfollower_user_0", "unfollower_user_1", "unfollower_user_2", "unfollower_user_3"],
+          kutuLoncat: ["unfollower_user_1", "unfollower_user_3"],
+          isFirstScan: false
+        }));
+      } catch(e) {}
+      
       setStatus('done');
     }, 2500);
   };
@@ -115,19 +151,25 @@ export default function Home() {
     // Feature: Historical Tracker & Kutu Loncat Detector
     const trackerUsername = data.ownerUsername || 'my_account';
     
+    let finalNewUnf: string[] = [];
+    let finalKutuLoncat: string[] = [];
+    let finalIsFirstScan = false;
+
     const lastScan = getLastScanData(trackerUsername);
     if (lastScan) {
       // Find new unfollowers (in current unfollowers, but not in last scan's unfollowers)
-      const newUnf = data.unfollowers.filter(u => !lastScan.unfollowers.includes(u));
-      setNewUnfollowers(newUnf);
+      finalNewUnf = data.unfollowers.filter(u => !lastScan.unfollowers.includes(u));
+      setNewUnfollowers(finalNewUnf);
       
       // Find Kutu Loncat (was in fans or mutuals, now in unfollowers)
-      const hitAndRun = newUnf.filter(u => lastScan.fans.includes(u) || lastScan.mutuals.includes(u));
-      setKutuLoncat(hitAndRun);
+      finalKutuLoncat = finalNewUnf.filter(u => lastScan.fans.includes(u) || lastScan.mutuals.includes(u));
+      setKutuLoncat(finalKutuLoncat);
+      finalIsFirstScan = false;
       setIsFirstScan(false);
     } else {
       setNewUnfollowers([]);
       setKutuLoncat([]);
+      finalIsFirstScan = true;
       setIsFirstScan(true);
     }
     
@@ -144,13 +186,26 @@ export default function Home() {
     });
     setHistory(newHistory);
     
+    try {
+      localStorage.setItem('followins_latest_session', JSON.stringify({
+        result: data,
+        newUnfollowers: finalNewUnf,
+        kutuLoncat: finalKutuLoncat,
+        isFirstScan: finalIsFirstScan
+      }));
+    } catch (e) {
+      console.warn("Storage is full, cannot save session.");
+    }
+    
     setStatus('done');
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-50 text-zinc-900 font-sans overflow-x-clip relative">
+    <div className="flex flex-col min-h-screen bg-zinc-50 text-zinc-900 font-sans relative">
       <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="print:hidden sticky top-0 z-[100]">
         <Header />
+      </div>
       
         <main className="flex-1 flex flex-col">
           {status === 'idle' && (
@@ -238,7 +293,7 @@ export default function Home() {
               transition={{ duration: 0.6 }}
               className="w-full px-6"
             >
-              <HistoryWidget />
+              <HistoryWidget onRestore={handleRestore} />
             </motion.div>
             
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
@@ -266,11 +321,20 @@ export default function Home() {
         )}
 
         {status === 'done' && result && (
-          <div className="w-full flex flex-col gap-5 items-center px-4 md:px-8 pt-12 pb-20 max-w-[1400px] mx-auto">
+          <div className="w-full flex flex-col gap-5 items-center px-4 md:px-8 pt-8 pb-20 max-w-[1400px] mx-auto">
+            <div className="w-full flex justify-start mb-2 print:hidden">
+              <button 
+                onClick={() => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 font-medium transition-colors bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm hover:shadow"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                {language === 'en' ? 'Back to Home' : 'Kembali ke Beranda'}
+              </button>
+            </div>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-end pb-6 gap-6 bg-white border border-zinc-200 rounded-xl p-8 shadow-sm"
+              className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 bg-white border border-zinc-200 rounded-xl p-8 shadow-sm"
             >
               <div>
                 <h2 className="text-4xl md:text-5xl font-black text-zinc-900 tracking-tight">
@@ -280,12 +344,21 @@ export default function Home() {
                   {result.ownerUsername ? `${t('summaryTitle')} • ${t('summaryDesc')}` : t('summaryDesc')}
                 </p>
               </div>
-              <button 
-                onClick={() => { setStatus('idle'); setIsDemo(false); }}
-                className="px-8 py-4 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors shadow-sm"
-              >
-                {t('checkAnotherBtn')}
-              </button>
+              <div className="flex w-full md:w-auto gap-3 flex-col md:flex-row print:hidden">
+                <button 
+                  onClick={() => window.print()}
+                  className="px-6 py-3 text-sm font-medium rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors shadow-sm flex items-center justify-center gap-2"
+                >
+                  <Printer className="w-4 h-4" />
+                  {language === 'en' ? 'Save PDF' : 'Simpan PDF'}
+                </button>
+                <button 
+                  onClick={resetApp}
+                  className="px-8 py-3 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors shadow-sm"
+                >
+                  {t('checkAnotherBtn')}
+                </button>
+              </div>
             </motion.div>
 
             {/* Fitur Baru: New Unfollowers Alert */}
@@ -296,21 +369,24 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="w-full bg-blue-50 border border-blue-200 text-blue-900 p-8 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm gap-6"
+                className="w-full bg-white bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 dark-no-gradient p-6 md:p-8 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm gap-6 print:hidden relative overflow-hidden"
               >
-                <div>
-                  <h3 className="font-bold text-2xl tracking-tight mb-2 flex items-center gap-3">
+                <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                  <Zap className="w-32 h-32 text-blue-600" />
+                </div>
+                <div className="relative z-10">
+                  <h3 className="font-bold text-2xl tracking-tight mb-2 flex items-center gap-3 text-blue-900 dark-title">
                     <span className="flex h-3 w-3 relative">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
                     </span>
                     {language === 'en' ? "Demo Mode" : "Mode Demo"}
                   </h3>
-                  <p className="text-base text-blue-700">{language === 'en' ? "This is sample data. Upload your own ZIP file to see real insights." : "Ini adalah contoh data acak. Unggah file ZIP Anda sendiri untuk melihat data asli."}</p>
+                  <p className="text-base text-blue-700 dark-desc">{language === 'en' ? "This is sample data. Upload your own ZIP file to see real insights." : "Ini adalah contoh data acak. Unggah file ZIP Anda sendiri untuk melihat data asli."}</p>
                 </div>
                 <button 
                   onClick={() => { setStatus('idle'); setIsDemo(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-6 py-3 bg-white hover:bg-blue-50 border border-blue-200 text-blue-700 font-medium rounded-lg transition-colors shrink-0 shadow-sm"
+                  className="relative z-10 px-6 py-3 bg-white hover:bg-blue-50 border border-blue-200 text-blue-700 dark-button-blue font-medium rounded-xl transition-colors shrink-0 shadow-sm"
                 >
                   {language === 'en' ? "Upload My File" : "Unggah File Saya"}
                 </button>
@@ -373,13 +449,16 @@ export default function Home() {
               <UserTable 
                 unfollowers={result.unfollowers}
                 fans={result.fans}
+                ownerUsername={result.ownerUsername || 'my_account'}
               />
             </motion.div>
           </div>
         )}
         </main>
   
-        <Footer />
+        <div className="print:hidden">
+          <Footer />
+        </div>
       </div>
     </div>
   );
