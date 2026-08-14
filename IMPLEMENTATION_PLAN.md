@@ -4,6 +4,7 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 
 ## Tahap 1: Setup Proyek & Infrastruktur Dasar
 - [x] Inisialisasi `create-next-app` dengan TypeScript dan Tailwind CSS.
+- [x] Standardisasi Environment & Version Control: Tambahkan konfigurasi `.env.local`, `.env.example`, dan `.gitignore`.
 - [x] Instal library tambahan: `jszip`, `recharts`, `lucide-react`, `framer-motion`.
 - [x] Atur tema global (*light mode* by default) di `tailwind.config.ts`.
 
