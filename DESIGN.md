@@ -32,6 +32,7 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
     - **`CohortChart.tsx`:** Retensi followers.
     - **`SeasonalityRadar.tsx`:** Aktivitas atau rasio followers berdasarkan tipe/waktu (mockup visualisai kompleks).
   - **`UserTable.tsx`:** Tabel canggih yang berfungsi sebagai Mini CRM. Fiturnya meliputi:
+    - 3 Tab Utama: Unfollowers, Fans, dan **Mutuals** (Saling mengikuti).
     - Labeling/Tagging warna-warni pada tiap akun (`labelColors.ts`).
     - Bulk Actions untuk pelabelan massal.
     - Fungsi Pencarian (*Search*) dan Filter.

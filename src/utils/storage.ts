@@ -115,3 +115,26 @@ export const saveUserLabel = (ownerUsername: string, targetUser: string, label: 
   
   localStorage.setItem(`followins_labels_${ownerUsername}`, JSON.stringify(labels));
 };
+
+export const getUnlockedAccounts = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const data = localStorage.getItem('followins_unlocked_accounts');
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    return [];
+  }
+};
+
+export const addUnlockedAccount = (username: string) => {
+  if (typeof window === 'undefined') return;
+  try {
+    const accounts = getUnlockedAccounts();
+    if (!accounts.includes(username)) {
+      accounts.push(username);
+      localStorage.setItem('followins_unlocked_accounts', JSON.stringify(accounts));
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};

@@ -7,6 +7,7 @@ export interface ParseResult {
   mutuals: string[];
   totalUnfollowersCount: number;
   totalFansCount: number;
+  totalMutualsCount: number;
   followersCount: number;
   followingCount: number;
   timeline: { date: string, followers: number, following: number }[];
@@ -254,6 +255,7 @@ export const parseInstagramZip = async (file: File): Promise<ParseResult> => {
     mutuals: mutuals.map(obfuscate),
     totalUnfollowersCount: unfollowers.length,
     totalFansCount: fans.length,
+    totalMutualsCount: mutuals.length,
     followersCount: followersSet.size,
     followingCount: followingSet.size,
     timeline,

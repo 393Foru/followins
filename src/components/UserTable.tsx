@@ -16,12 +16,14 @@ interface UserTableProps {
   onUnlock: () => void;
   totalUnfollowersCount: number;
   totalFansCount: number;
+  mutuals: string[];
+  totalMutualsCount: number;
 }
 
-export default function UserTable({ unfollowers, fans, ownerUsername, isPremium, onUnlock, totalUnfollowersCount, totalFansCount }: UserTableProps) {
+export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, isPremium, onUnlock, totalUnfollowersCount, totalFansCount, totalMutualsCount }: UserTableProps) {
   const { t, formatCompactNumber, language } = useLanguage();
   
-  const [activeTab, setActiveTab] = useState<'unfollowers' | 'fans'>('unfollowers');
+  const [activeTab, setActiveTab] = useState<'unfollowers' | 'fans' | 'mutuals'>('unfollowers');
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const [labels, setLabels] = useState<Record<string, string>>({});
@@ -59,7 +61,7 @@ export default function UserTable({ unfollowers, fans, ownerUsername, isPremium,
     setEditingUser(null);
   };
 
-  const currentList = activeTab === 'unfollowers' ? unfollowers : fans;
+  const currentList = activeTab === 'unfollowers' ? unfollowers : (activeTab === 'fans' ? fans : mutuals);
   const baseList = currentList; // The parent already truncates if not premium
   
   const filteredList = useMemo(() => {
@@ -76,23 +78,32 @@ export default function UserTable({ unfollowers, fans, ownerUsername, isPremium,
     return list;
   }, [baseList, labels, labelFilter, searchQuery]);
   
+  const currentTotalCount = activeTab === 'unfollowers' ? totalUnfollowersCount : (activeTab === 'fans' ? totalFansCount : totalMutualsCount);
+  const totalHidden = Math.max(0, currentTotalCount - currentList.length);
+  
   const realFilteredCount = useMemo(() => {
+    if (searchQuery.trim() === '') {
+      if (labelFilter === 'all') return currentTotalCount;
+      if (labelFilter === 'unlabeled') {
+        const labeledCount = Object.keys(labels).length;
+        return Math.max(0, currentTotalCount - labeledCount);
+      }
+      return currentList.filter(u => labels[u] === labelFilter).length;
+    }
+    
     let list = [...currentList];
     if (labelFilter === 'unlabeled') {
       list = list.filter(u => !labels[u]);
     } else if (labelFilter !== 'all') {
       list = list.filter(u => labels[u] === labelFilter);
     }
-    if (searchQuery.trim() !== '') {
-      const q = searchQuery.toLowerCase();
-      let matches = 0;
-      for (let i = 0; i < list.length; i++) {
-        if (deobfuscate(list[i]).toLowerCase().includes(q)) matches++;
-      }
-      return matches;
+    const q = searchQuery.toLowerCase();
+    let matches = 0;
+    for (let i = 0; i < list.length; i++) {
+      if (deobfuscate(list[i]).toLowerCase().includes(q)) matches++;
     }
-    return list.length;
-  }, [currentList, labels, labelFilter, searchQuery]);
+    return matches;
+  }, [currentList, labels, labelFilter, searchQuery, currentTotalCount]);
   
   const presetOptions = useMemo(() => {
     const defaults = language === 'en' 
@@ -105,9 +116,6 @@ export default function UserTable({ unfollowers, fans, ownerUsername, isPremium,
   const uniqueLabelsUsed = useMemo(() => {
     return Array.from(new Set(Object.values(labels).filter(l => l.trim() !== '')));
   }, [labels]);
-  
-  const currentTotalCount = activeTab === 'unfollowers' ? totalUnfollowersCount : totalFansCount;
-  const totalHidden = Math.max(0, currentTotalCount - currentList.length);
   
   const displayList = useMemo(() => {
     let listToSort = [...filteredList];
@@ -135,7 +143,7 @@ export default function UserTable({ unfollowers, fans, ownerUsername, isPremium,
     setSortBy(val as any);
   };
 
-  const handleTabChange = (tab: 'unfollowers' | 'fans') => {
+  const handleTabChange = (tab: 'unfollowers' | 'fans' | 'mutuals') => {
     setActiveTab(tab);
     setLabelFilter('all');
     setSearchQuery('');
@@ -186,7 +194,7 @@ export default function UserTable({ unfollowers, fans, ownerUsername, isPremium,
       
       <div className="flex flex-col md:flex-row border-b border-zinc-200 bg-zinc-50">
         <button
-          className={`flex-1 py-5 text-center font-bold text-lg md:text-xl transition-colors border-r border-zinc-200 ${
+          className={`flex-1 py-4 text-center font-bold text-base md:text-lg transition-colors border-r border-zinc-200 ${
             activeTab === 'unfollowers' ? 'bg-white text-zinc-900 shadow-[inset_0_-2px_0_0_#52525b]' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
           }`}
           onClick={() => handleTabChange('unfollowers')}
@@ -194,12 +202,20 @@ export default function UserTable({ unfollowers, fans, ownerUsername, isPremium,
           Unfollowers <span className="font-mono text-sm text-zinc-400 ml-1">({formatCompactNumber(totalUnfollowersCount)})</span>
         </button>
         <button
-          className={`flex-1 py-5 text-center font-bold text-lg md:text-xl transition-colors ${
+          className={`flex-1 py-4 text-center font-bold text-base md:text-lg transition-colors border-r border-zinc-200 ${
             activeTab === 'fans' ? 'bg-white text-teal-600 shadow-[inset_0_-2px_0_0_#14b8a6]' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
           }`}
           onClick={() => handleTabChange('fans')}
         >
           Fans <span className="font-mono text-sm text-teal-400 ml-1">({formatCompactNumber(totalFansCount)})</span>
+        </button>
+        <button
+          className={`flex-1 py-4 text-center font-bold text-base md:text-lg transition-colors ${
+            activeTab === 'mutuals' ? 'bg-white text-indigo-600 shadow-[inset_0_-2px_0_0_#4f46e5]' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
+          }`}
+          onClick={() => handleTabChange('mutuals')}
+        >
+          Mutuals <span className="font-mono text-sm text-indigo-400 ml-1">({formatCompactNumber(totalMutualsCount)})</span>
         </button>
       </div>
       

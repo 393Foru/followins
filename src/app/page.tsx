@@ -25,7 +25,7 @@ import AccountHealthRatio from '@/components/AccountHealthRatio';
 import NewUnfollowersAlert from '@/components/NewUnfollowersAlert';
 import PendingRequests from '@/components/PendingRequests';
 import { parseInstagramZip, ParseResult } from '@/utils/instagramParser';
-import { saveHistory, HistoryRecord, saveLastScanData, getLastScanData } from '@/utils/storage';
+import { saveHistory, HistoryRecord, saveLastScanData, getLastScanData, getUnlockedAccounts, addUnlockedAccount } from '@/utils/storage';
 
 let secureCache: { unfollowers: string[], fans: string[], mutuals: string[], newUnfollowers: string[], kutuLoncat: string[] } | null = null;
 
@@ -40,10 +40,15 @@ export default function Home() {
   const [newUnfollowers, setNewUnfollowers] = useState<string[]>([]);
   const [kutuLoncat, setKutuLoncat] = useState<string[]>([]);
   const [isFirstScan, setIsFirstScan] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
+
+  const isPremium = result ? getUnlockedAccounts().includes(result.ownerUsername || 'my_account') : false;
 
   const handleUnlock = () => {
-    setIsPremium(true);
+    if (result && result.ownerUsername) {
+      addUnlockedAccount(result.ownerUsername);
+    }
+    
+    // Force a re-render by creating a new object reference, restoring full data
     if (secureCache && result) {
       setResult({
         ...result,
@@ -76,15 +81,18 @@ export default function Home() {
             kutuLoncat: session.kutuLoncat || []
           };
 
+          const currentIsPremium = getUnlockedAccounts().includes(session.result.ownerUsername || 'my_account');
+          
           const dataForState = { ...session.result };
-          if (!isPremium) {
+          if (!currentIsPremium) {
             dataForState.unfollowers = session.result.unfollowers.slice(0, 100);
             dataForState.fans = session.result.fans.slice(0, 100);
+            dataForState.mutuals = session.result.mutuals.slice(0, 100);
           }
 
           setResult(dataForState);
-          setNewUnfollowers(!isPremium ? (session.newUnfollowers || []).slice(0, 100) : (session.newUnfollowers || []));
-          setKutuLoncat(!isPremium ? (session.kutuLoncat || []).slice(0, 100) : (session.kutuLoncat || []));
+          setNewUnfollowers(!currentIsPremium ? (session.newUnfollowers || []).slice(0, 100) : (session.newUnfollowers || []));
+          setKutuLoncat(!currentIsPremium ? (session.kutuLoncat || []).slice(0, 100) : (session.kutuLoncat || []));
           setIsFirstScan(session.isFirstScan || false);
           setStatus('done');
         }
@@ -160,15 +168,18 @@ export default function Home() {
         kutuLoncat: allKutu
       };
 
+      const currentIsPremium = getUnlockedAccounts().includes(demoData.ownerUsername || 'my_account');
+      
       const dataForState = { ...demoData };
-      if (!isPremium) {
+      if (!currentIsPremium) {
         dataForState.unfollowers = demoData.unfollowers.slice(0, 100);
         dataForState.fans = demoData.fans.slice(0, 100);
+        dataForState.mutuals = demoData.mutuals.slice(0, 100);
       }
       
       setResult(dataForState as any);
-      setNewUnfollowers(!isPremium ? allNewUnf.slice(0, 100) : allNewUnf);
-      setKutuLoncat(!isPremium ? allKutu.slice(0, 100) : allKutu);
+      setNewUnfollowers(!currentIsPremium ? allNewUnf.slice(0, 100) : allNewUnf);
+      setKutuLoncat(!currentIsPremium ? allKutu.slice(0, 100) : allKutu);
       setIsFirstScan(false);
       
       try {
@@ -230,15 +241,18 @@ export default function Home() {
       kutuLoncat: finalKutuLoncat
     };
 
+    const currentIsPremium = getUnlockedAccounts().includes(data.ownerUsername || 'my_account');
+
     // 2. Buat versi terpotong untuk React State jika gratisan
     const dataForState = { ...data };
-    if (!isPremium) {
+    if (!currentIsPremium) {
       dataForState.unfollowers = data.unfollowers.slice(0, 100);
       dataForState.fans = data.fans.slice(0, 100);
+      dataForState.mutuals = data.mutuals.slice(0, 100);
     }
     
-    setNewUnfollowers(!isPremium ? finalNewUnf.slice(0, 100) : finalNewUnf);
-    setKutuLoncat(!isPremium ? finalKutuLoncat.slice(0, 100) : finalKutuLoncat);
+    setNewUnfollowers(!currentIsPremium ? finalNewUnf.slice(0, 100) : finalNewUnf);
+    setKutuLoncat(!currentIsPremium ? finalKutuLoncat.slice(0, 100) : finalKutuLoncat);
     
     // Save current data for next scan (this uses original full data thanks to ParseResult being the full object originally)
     saveLastScanData(trackerUsername, data.unfollowers, data.fans, data.mutuals);
@@ -517,11 +531,13 @@ export default function Home() {
               <UserTable 
                 unfollowers={result.unfollowers}
                 fans={result.fans}
+                mutuals={result.mutuals}
                 ownerUsername={result.ownerUsername || 'my_account'}
                 isPremium={isPremium}
                 onUnlock={handleUnlock}
                 totalUnfollowersCount={result.totalUnfollowersCount || result.unfollowers.length}
                 totalFansCount={result.totalFansCount || result.fans.length}
+                totalMutualsCount={result.totalMutualsCount || result.mutuals.length}
               />
             </motion.div>
           </div>

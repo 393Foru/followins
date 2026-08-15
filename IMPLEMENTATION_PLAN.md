@@ -25,7 +25,8 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 - [x] Implementasikan `MetricCards.tsx` (Jumlah followers/unfollowers).
 - [x] Implementasikan `GrowthChart.tsx` dan fitur visualisasi lainnya (Cohort, Seasonality Radar, dll).
 - [x] Implementasikan `UserTable.tsx` (Menampilkan maksimal 100 akun yang dipilih secara **acak** untuk versi gratis).
-- [x] Peningkatan *UserTable* (Mini CRM): Tambahkan fitur Label/Tagging akun berwarna, Bulk Actions, fungsi Pencarian (Search), dan Penyortiran (Sort).
+- [x] Peningkatan *UserTable* (Mini CRM): Tambahkan tab **Mutuals** (Saling Follow), fitur Label/Tagging akun berwarna, Bulk Actions, fungsi Pencarian (Search), dan Penyortiran (Sort).
+- [x] Refaktor *Paywall*: Pindahkan logika pemotongan array (slice data) ke komponen induk (`page.tsx`) agar keamanan terjamin dan mempermudah render.
 
 ## Tahap 4: Sistem Bisnis (Rate Limit & Paywall)
 - [x] **Rate Limiting:** Integrasikan `FingerprintJS` untuk mendeteksi ID perangkat (*visitorId*) secara *client-side* dan berikan pembatasan maksimal 5 kali unggah ZIP per bulan per perangkat pada komponen `ZipUploader.tsx`.
@@ -42,5 +43,5 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 - [x] **Dark Mode:** Terapkan dukungan tema Gelap/Terang via `ThemeContext.tsx`.
 - [x] **Dukungan Bantuan:** Buat komponen `EmailSupportLink.tsx` terpusat untuk halaman Footer dan halaman Legal.
 - [ ] **PWA Support:** Konfigurasikan *Progressive Web App* agar website bisa diinstal ke *Home Screen* HP.
-- [ ] **Multi-Account Reset:** Tambahkan fungsi bersihkan *cache* untuk memungkinkan pengguna mengecek akun lain tanpa *reload*.
+- [x] **Multi-Account Reset:** Tambahkan fungsi bersihkan *cache* untuk memungkinkan pengguna mengecek akun lain tanpa *reload* (diimplementasikan via `resetApp`).
 - [ ] Lakukan End-to-End (E2E) Test keseluruhan alur dari *upload* hingga simulasi pembayaran.
