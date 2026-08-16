@@ -46,18 +46,7 @@ export const saveHistory = (record: Omit<HistoryRecord, 'date' | 'timestamp'>): 
   return history;
 };
 
-export const getHistory = (): HistoryRecord[] => {
-  if (typeof window === 'undefined') return [];
-  const existingStr = localStorage.getItem('followins_history');
-  if (existingStr) {
-    try {
-      return JSON.parse(existingStr);
-    } catch (e) {
-      return [];
-    }
-  }
-  return [];
-};
+
 
 export interface LastScanData {
   timestamp: number;

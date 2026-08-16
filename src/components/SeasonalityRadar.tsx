@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { useLanguage } from '@/i18n/LanguageContext';
+import ChartContainer from './ChartContainer';
 
 interface SeasonalityRadarProps {
   data: { date: string, followers: number }[];
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
 export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
   const { t } = useLanguage();
@@ -47,20 +47,14 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
-
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6 border-b border-zinc-200 pb-6 relative z-10">
-        <div>
-          <h3 className="text-2xl font-bold text-zinc-900 tracking-tight mb-2">{t('seasonTitle')}</h3>
-          <p className="text-sm text-zinc-600 font-light">
-            {selectedYear === 'all' 
-              ? t('seasonDescAll')
-              : `${t('seasonDescYear')} ${selectedYear}?`
-            }
-          </p>
-        </div>
-        
-        {availableYears.length > 0 && (
+    <ChartContainer
+      title={t('seasonTitle')}
+      description={selectedYear === 'all' 
+        ? t('seasonDescAll')
+        : `${t('seasonDescYear')} ${selectedYear}?`
+      }
+      controls={
+        availableYears.length > 0 && (
           <select 
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
@@ -71,9 +65,9 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
               <option key={year} value={year}>{t('growthYear')} {year}</option>
             ))}
           </select>
-        )}
-      </div>
-      
+        )
+      }
+    >
       <div className="h-96 w-full mt-auto relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
@@ -88,6 +82,6 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
           </RadarChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </ChartContainer>
   );
 }

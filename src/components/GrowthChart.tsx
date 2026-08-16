@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, Legend } from 'recharts';
 import { useLanguage } from '@/i18n/LanguageContext';
+import ChartContainer from './ChartContainer';
 
 interface GrowthChartProps {
   data: { date: string, followers: number, following: number }[];
@@ -78,19 +79,11 @@ export default function GrowthChart({ data }: GrowthChartProps) {
   }, [data, viewMode, selectedYear, MONTHS, t]);
 
   return (
-    <div className="w-full p-6 md:p-8 bg-white border border-zinc-200 rounded-3xl shadow-sm relative overflow-hidden">
-
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6 border-b border-zinc-200 pb-6 relative z-10">
-        
-        <div className="flex flex-col">
-          <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">{t('growthTitle')}</h3>
-          <p className="text-sm text-zinc-500 font-light mt-2">
-            {viewMode === 'monthly' ? `${t('growthDescMonthly')} ${selectedYear}` : t('growthDescYearly')}
-          </p>
-        </div>
-        
-        {/* Kontrol UI: Tahun & Toggle Mode */}
-        <div className="flex items-center gap-4">
+    <ChartContainer 
+      title={t('growthTitle')} 
+      description={viewMode === 'monthly' ? `${t('growthDescMonthly')} ${selectedYear}` : t('growthDescYearly')}
+      controls={
+        <>
           {viewMode === 'monthly' && availableYears.length > 0 && (
             <select 
               value={selectedYear}
@@ -121,10 +114,10 @@ export default function GrowthChart({ data }: GrowthChartProps) {
               {t('growthPerYear')}
             </button>
           </div>
-        </div>
-      </div>
-      
-      <div className="h-96 w-full mt-8 relative z-10">
+        </>
+      }
+    >
+      <div className="h-96 w-full relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4e4e7" />
@@ -150,6 +143,6 @@ export default function GrowthChart({ data }: GrowthChartProps) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </ChartContainer>
   );
 }

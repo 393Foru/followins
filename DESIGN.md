@@ -13,7 +13,8 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
 - **Komponen Global:**
   - **`Header.tsx`:** Bilah navigasi atas yang berisi Logo, tombol *Toggle Language* (ID/EN), dan tombol *Toggle Theme* (Light/Dark).
   - **`Footer.tsx`:** Bilah bawah berisi tautan *Privacy Policy*, *Terms of Service*, dan `EmailSupportLink.tsx`.
-  - **Contexts:** `LanguageContext.tsx` untuk lokalisasi, dan `ThemeContext.tsx` untuk persistensi tema gelap/terang.
+  - **`ChartContainer.tsx`:** Komponen pembungkus serbaguna untuk menstandarkan tampilan semua grafik (Growth, Cohort, dll) dengan judul dan deskripsi yang rapi.
+  - **Contexts & Hooks:** `LanguageContext.tsx` untuk lokalisasi, `ThemeContext.tsx` untuk persistensi tema gelap/terang, dan `useUserFilter.ts` untuk abstraksi logika pencarian/penyortiran data tabel.
 - **`/` (Landing Page):**
   - **Hero Section:** Penjelasan singkat yang persuasif.
   - **`Features.tsx` & `HowItWorks.tsx`:** Penjelasan nilai jual dan cara penggunaan alat secara visual.
@@ -41,7 +42,7 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
     - Sisa data disembunyikan menggunakan *Skeleton Dummy Data* (Anti-F12).
 - **`PaywallModal.tsx`:**
   - Dirender menggunakan `createPortal` pada level tertinggi DOM. Muncul ketika pengguna ingin membuka batasan freemium untuk melihat seluruh akun. Menampilkan simulasi UI pembayaran QRIS yang interaktif.
-- **Halaman Legal Statis:**
+- **Halaman Legal Statis:** Menggunakan pembungkus `LegalPageLayout.tsx` untuk konsistensi desain UI.
   - **`/privacy`:** Halaman Kebijakan Privasi yang menegaskan komitmen pengolahan data secara lokal.
   - **`/terms`:** Halaman Syarat dan Ketentuan penggunaan layanan.
 

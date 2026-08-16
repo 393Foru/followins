@@ -6,7 +6,8 @@ import PaywallModal from './PaywallModal';
 import { deobfuscate } from '@/utils/crypto';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { getUserLabels, saveUserLabel } from '@/utils/storage';
-import { getLabelColor, getColorClasses } from '@/utils/labelColors';
+import UserListItem from './UserListItem';
+import { useUserFilter } from '@/hooks/useUserFilter';
 
 interface UserTableProps {
   unfollowers: string[];
@@ -64,46 +65,17 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
   const currentList = activeTab === 'unfollowers' ? unfollowers : (activeTab === 'fans' ? fans : mutuals);
   const baseList = currentList; // The parent already truncates if not premium
   
-  const filteredList = useMemo(() => {
-    let list = [...baseList];
-    if (labelFilter === 'unlabeled') {
-      list = list.filter(u => !labels[u]);
-    } else if (labelFilter !== 'all') {
-      list = list.filter(u => labels[u] === labelFilter);
-    }
-    if (searchQuery.trim() !== '') {
-      const q = searchQuery.toLowerCase();
-      list = list.filter(u => deobfuscate(u).toLowerCase().includes(q));
-    }
-    return list;
-  }, [baseList, labels, labelFilter, searchQuery]);
-  
   const currentTotalCount = activeTab === 'unfollowers' ? totalUnfollowersCount : (activeTab === 'fans' ? totalFansCount : totalMutualsCount);
   const totalHidden = Math.max(0, currentTotalCount - currentList.length);
   
-  const realFilteredCount = useMemo(() => {
-    if (searchQuery.trim() === '') {
-      if (labelFilter === 'all') return currentTotalCount;
-      if (labelFilter === 'unlabeled') {
-        const labeledCount = Object.keys(labels).length;
-        return Math.max(0, currentTotalCount - labeledCount);
-      }
-      return currentList.filter(u => labels[u] === labelFilter).length;
-    }
-    
-    let list = [...currentList];
-    if (labelFilter === 'unlabeled') {
-      list = list.filter(u => !labels[u]);
-    } else if (labelFilter !== 'all') {
-      list = list.filter(u => labels[u] === labelFilter);
-    }
-    const q = searchQuery.toLowerCase();
-    let matches = 0;
-    for (let i = 0; i < list.length; i++) {
-      if (deobfuscate(list[i]).toLowerCase().includes(q)) matches++;
-    }
-    return matches;
-  }, [currentList, labels, labelFilter, searchQuery, currentTotalCount]);
+  const { realFilteredCount, displayList } = useUserFilter({
+    currentList,
+    labels,
+    labelFilter,
+    searchQuery,
+    sortBy,
+    currentTotalCount,
+  });
   
   const presetOptions = useMemo(() => {
     const defaults = language === 'en' 
@@ -117,19 +89,7 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
     return Array.from(new Set(Object.values(labels).filter(l => l.trim() !== '')));
   }, [labels]);
   
-  const displayList = useMemo(() => {
-    let listToSort = [...filteredList];
-    
-    if (sortBy === 'asc') {
-      listToSort.sort((a, b) => deobfuscate(a).localeCompare(deobfuscate(b)));
-    } else if (sortBy === 'desc') {
-      listToSort.sort((a, b) => deobfuscate(b).localeCompare(deobfuscate(a)));
-    } else {
-      listToSort.sort(() => 0.5 - Math.random());
-    }
-    
-    return listToSort.map(deobfuscate);
-  }, [filteredList, sortBy]);
+
 
   const labeledCount = currentList.filter(u => !!labels[u]).length;
   const progressPercent = currentList.length > 0 ? Math.round((labeledCount / currentList.length) * 100) : 0;
@@ -140,7 +100,7 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
       setSortBy('random');
       return;
     }
-    setSortBy(val as any);
+    setSortBy(val as "random" | "asc" | "desc");
   };
 
   const handleTabChange = (tab: 'unfollowers' | 'fans' | 'mutuals') => {
@@ -348,107 +308,24 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
             const isEditing = editingUser === user;
             const currentLabel = labels[user];
             const isSelected = selectedUsers.includes(user);
-            const badgeColor = currentLabel ? getLabelColor(currentLabel) : 'teal';
-            const badgeClasses = currentLabel ? getColorClasses(badgeColor) : '';
             
             return (
-              <li key={idx} className={`bg-white border rounded-xl hover:shadow-sm transition-all group flex flex-col justify-center min-h-[72px] overflow-hidden ${isSelected ? 'border-teal-400 ring-1 ring-teal-400 bg-teal-50/10' : 'border-zinc-200 hover:border-zinc-300'}`}>
-                {isEditing ? (
-                  <div className="p-3 flex flex-col gap-2 bg-zinc-50 h-full w-full justify-center">
-                    <div className="flex items-center gap-2">
-                      <input 
-                        type="text" 
-                        autoFocus
-                        className="flex-1 text-xs border border-zinc-200 rounded-md px-2 py-1.5 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
-                        placeholder={language === 'en' ? "Add label..." : "Beri label..."}
-                        value={editInputValue}
-                        onChange={(e) => setEditInputValue(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') handleSaveLabel(user);
-                          if (e.key === 'Escape') setEditingUser(null);
-                        }}
-                      />
-                      <button onClick={() => handleSaveLabel(user)} className="p-1.5 bg-zinc-900 text-white rounded-md hover:bg-zinc-800 transition-colors shrink-0">
-                        <Check className="w-3.5 h-3.5" />
-                      </button>
-                      <button onClick={() => setEditingUser(null)} className="p-1.5 bg-zinc-200 text-zinc-600 rounded-md hover:bg-zinc-300 transition-colors shrink-0">
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {presetOptions.map((preset, pIdx) => (
-                        <button 
-                          key={pIdx}
-                          onClick={() => handleSaveLabel(user, preset)}
-                          className="text-[9px] px-1.5 py-0.5 bg-white border border-zinc-200 text-zinc-500 rounded hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
-                        >
-                          {preset}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-3.5 flex flex-col gap-1.5 w-full relative">
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-2 overflow-hidden">
-                        <button 
-                          onClick={() => toggleSelect(user)}
-                          className={`shrink-0 z-20 transition-colors ${isSelected ? 'opacity-100 text-teal-600' : 'opacity-0 group-hover:opacity-100 text-zinc-300 hover:text-zinc-500'}`}
-                        >
-                          {isSelected ? <CheckSquare className="w-4.5 h-4.5" /> : <Square className="w-4.5 h-4.5" />}
-                        </button>
-                        <a 
-                          href={`https://instagram.com/${user}`} 
-                          target="_blank" 
-                          rel="noreferrer" 
-                          onClick={(e) => {
-                              if (!isPremium) {
-                                const today = new Date().toISOString().split('T')[0];
-                                const key = `followins_clicked_users_${today}`;
-                                let clickedUsers: string[] = [];
-                                try {
-                                  // We use sessionStorage to enforce session-based limits for free users, harder to bypass permanently
-                                  clickedUsers = JSON.parse(sessionStorage.getItem(key) || '[]');
-                                } catch (err) {}
-                                
-                                const hasClickedBefore = clickedUsers.includes(user);
-                                
-                                if (!hasClickedBefore && clickedUsers.length >= 10) {
-                                  e.preventDefault();
-                                  setIsModalOpen(true);
-                                } else if (!hasClickedBefore) {
-                                  clickedUsers.push(user);
-                                  sessionStorage.setItem(key, JSON.stringify(clickedUsers));
-                                }
-                              }
-                            }}
-                          className="block text-sm md:text-base font-medium text-zinc-800 hover:text-teal-600 font-mono truncate transition-colors"
-                        >
-                          @{user}
-                        </a>
-                      </div>
-                      <button 
-                        onClick={() => {
-                          setEditingUser(user);
-                          setEditInputValue(currentLabel || "");
-                        }}
-                        className={`p-1.5 rounded-md transition-colors shrink-0 ${currentLabel ? 'opacity-100 text-teal-600 hover:bg-teal-50' : 'opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100'}`}
-                        title={language === 'en' ? 'Add/Edit Label' : 'Tambah/Edit Label'}
-                      >
-                        <Tag className="w-4 h-4" />
-                      </button>
-                    </div>
-                    
-                    {currentLabel && (
-                      <div className="pl-6 pr-2 w-full">
-                        <span className={`inline-block text-[10px] font-bold px-2 py-0.5 border rounded-full truncate max-w-full ${badgeClasses}`}>
-                          {currentLabel}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </li>
+              <UserListItem 
+                key={idx}
+                user={user}
+                isEditing={isEditing}
+                currentLabel={currentLabel}
+                isSelected={isSelected}
+                isPremium={isPremium}
+                presetOptions={presetOptions}
+                editInputValue={editInputValue}
+                language={language}
+                onEditChange={setEditInputValue}
+                onSetEditing={setEditingUser}
+                onSaveLabel={handleSaveLabel}
+                onToggleSelect={toggleSelect}
+                onOpenModal={() => setIsModalOpen(true)}
+              />
             );
           })}
           

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useLanguage } from '@/i18n/LanguageContext';
+import ChartContainer from './ChartContainer';
 
 interface CohortChartProps {
   data: { year: string, fans: number, mutuals: number, unfollowers: number }[];
@@ -27,15 +28,7 @@ export default function CohortChart({ data }: CohortChartProps) {
   const paginatedData = reversedData.slice(startIndex, startIndex + itemsPerPage).reverse();
 
   return (
-    <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
-
-      <div className="relative z-10 mb-8 border-b border-zinc-200 pb-6">
-        <h3 className="text-2xl font-bold text-zinc-900 tracking-tight mb-2">{t('cohortTitle')}</h3>
-        <p className="text-sm text-zinc-600 font-light">
-          {t('cohortDesc')}
-        </p>
-      </div>
-      
+    <ChartContainer title={t('cohortTitle')} description={t('cohortDesc')}>
       <div className="h-80 w-full mt-auto relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={paginatedData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
@@ -80,6 +73,6 @@ export default function CohortChart({ data }: CohortChartProps) {
           </button>
         </div>
       )}
-    </div>
+    </ChartContainer>
   );
 }
