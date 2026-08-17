@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Lock, Tag, X, Check, Filter, CheckSquare, Square, Search, ArrowDownAZ, ArrowUpZA, Shuffle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Lock, X, Filter, CheckSquare, Square, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import PaywallModal from './PaywallModal';
-import { deobfuscate } from '@/utils/crypto';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { getUserLabels, saveUserLabel } from '@/utils/storage';
 import UserListItem from './UserListItem';
@@ -42,11 +41,6 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
-  // Reset pagination when filters/tabs change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab, labelFilter, searchQuery, sortBy]);
-
   // Subsets are handled by the parent component now
   // We use unfollowers and fans directly as they are already filtered if not premium
 
@@ -72,7 +66,6 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
   };
 
   const currentList = activeTab === 'unfollowers' ? unfollowers : (activeTab === 'fans' ? fans : mutuals);
-  const baseList = currentList; // The parent already truncates if not premium
   
   const currentTotalCount = activeTab === 'unfollowers' ? totalUnfollowersCount : (activeTab === 'fans' ? totalFansCount : totalMutualsCount);
   const totalHidden = Math.max(0, currentTotalCount - currentList.length);
@@ -104,6 +97,7 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
   const progressPercent = currentList.length > 0 ? Math.round((labeledCount / currentList.length) * 100) : 0;
 
   const handleSortChange = (val: string) => {
+    setCurrentPage(1);
     if ((val === 'asc' || val === 'desc') && !isPremium) {
       setIsModalOpen(true);
       setSortBy('random');
@@ -117,6 +111,7 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
     setLabelFilter('all');
     setSearchQuery('');
     setSelectedUsers([]);
+    setCurrentPage(1);
   };
 
   const toggleSelect = (user: string) => {
@@ -278,7 +273,10 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
                 type="text"
                 placeholder={language === 'en' ? "Search user..." : "Cari user..."}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full pl-9 p-2.5"
               />
             </div>
@@ -291,7 +289,10 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
                 <select 
                   className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-[13px] md:text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 font-medium cursor-pointer"
                   value={labelFilter}
-                  onChange={(e) => setLabelFilter(e.target.value)}
+                  onChange={(e) => {
+                    setLabelFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
                   <option value="all">{language === 'en' ? 'All Accounts' : 'Semua Akun'}</option>
                   <option value="unlabeled">{language === 'en' ? 'No Label' : 'Tanpa Label'}</option>

@@ -23,13 +23,15 @@ Followins adalah alat analitik Instagram berbasis web yang mengutamakan privasi 
 > **Status: Backlog (Direncanakan untuk Iterasi Mendatang)**
 > Fitur-fitur dan strategi arsitektur di bawah ini merupakan bagian dari visi ekspansi jangka panjang produk. Implementasinya sengaja ditunda (*on-hold*) pada fase MVP saat ini agar kita dapat berfokus mematangkan stabilitas inti, perbaikan UI/UX dasar, dan peluncuran (*soft-launch*). Rencana-rencana ini akan dieksekusi secara bertahap pada pembaruan versi (v2.0) selanjutnya.
 
-### 4.1. Analitik Tingkat Lanjut (Advanced Analytics)
+### 4.1. Analitik Tingkat Lanjut & Manajemen
+- **Manajemen Multi-Akun (Cross-Account Dashboard):** Kemampuan untuk menyimpan dan beralih secara instan antar riwayat analisis dari beberapa akun Instagram yang berbeda di satu perangkat tanpa harus mengunggah ulang *file* ZIP berulang kali (sangat berguna bagi Agensi/Manajer Sosial Media yang memegang banyak akun klien).
 - **Detektor "Ghost Follower":** Menyilangkan (*cross-reference*) data pengikut dengan histori file *Likes* dan *Comments* di dalam ZIP untuk mendeteksi pengikut pasif yang tidak pernah berinteraksi.
 - **Super Fans Leaderboard:** Memetakan 10 pengikut paling interaktif berdasarkan frekuensi *likes/comments*, yang sangat berguna untuk program *Giveaway*.
 
 ### 4.2. Monetisasi & Sistem Bisnis
 - **Integrasi Payment Gateway Otomatis (QRIS):** Mengganti UI simulasi QRIS saat ini dengan API riil (seperti Midtrans atau Xendit) agar transaksi mikro untuk membuka batas *paywall* 100 nama tervalidasi secara instan tanpa tenaga admin.
 - **Sistem Premium Bertingkat (Multi-Tier Paywall):** Memperluas skema monetisasi dari sistem satu harga menjadi paket berjenjang (*Tiering*). Misalnya: "Paket Dasar" (menampilkan setengah dari total nama) dan "Paket Penuh" (menampilkan seluruh daftar nama 100%).
+- **Lisensi Premium Lintas Akun:** Menerapkan skema validasi premium berbasis sesi identitas pengguna (*Device/Browser*), bukan mengikat pada satu profil Instagram. Sehingga, manajer media sosial yang membeli lisensi Premium dapat menggunakannya untuk menembus *paywall* 5 akun klien yang berbeda tanpa harus membayar langganan terpisah per akun.
 - **Ekspor Laporan PDF Profesional (White-label):** Generator laporan eksklusif berbentuk PDF/CSV yang memungkinkan Manajer Sosial Media (*Agensi B2B*) mengunggah logo perusahaan mereka sendiri di dokumen laporan.
 - **Model Bisnis "Jual Putus" (One-Time Audit):** Skema pembayaran sekali transaksi (bukan langganan) bagi *influencer* yang hanya membutuhkan laporan mendalam secara periodik (misal: audit setiap 3 bulan).
 - **Ruang Monetisasi Iklan (Google AdSense):** Memanfaatkan efisiensi biaya server (*Client-Side*) dengan menyisipkan slot iklan (AdSense/Affiliate) yang tidak mengganggu untuk meraup pendapatan pasif dari lalu lintas pengguna gratis.
