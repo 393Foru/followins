@@ -29,13 +29,16 @@ Followins adalah alat analitik Instagram berbasis web yang mengutamakan privasi 
 
 ### 4.2. Monetisasi & Sistem Bisnis
 - **Integrasi Payment Gateway Otomatis (QRIS):** Mengganti UI simulasi QRIS saat ini dengan API riil (seperti Midtrans atau Xendit) agar transaksi mikro untuk membuka batas *paywall* 100 nama tervalidasi secara instan tanpa tenaga admin.
+- **Sistem Premium Bertingkat (Multi-Tier Paywall):** Memperluas skema monetisasi dari sistem satu harga menjadi paket berjenjang (*Tiering*). Misalnya: "Paket Dasar" (menampilkan setengah dari total nama) dan "Paket Penuh" (menampilkan seluruh daftar nama 100%).
 - **Ekspor Laporan PDF Profesional (White-label):** Generator laporan eksklusif berbentuk PDF/CSV yang memungkinkan Manajer Sosial Media (*Agensi B2B*) mengunggah logo perusahaan mereka sendiri di dokumen laporan.
 - **Model Bisnis "Jual Putus" (One-Time Audit):** Skema pembayaran sekali transaksi (bukan langganan) bagi *influencer* yang hanya membutuhkan laporan mendalam secara periodik (misal: audit setiap 3 bulan).
 - **Ruang Monetisasi Iklan (Google AdSense):** Memanfaatkan efisiensi biaya server (*Client-Side*) dengan menyisipkan slot iklan (AdSense/Affiliate) yang tidak mengganggu untuk meraup pendapatan pasif dari lalu lintas pengguna gratis.
 
 ### 4.3. Infrastruktur, Keamanan, & Distribusi
 - **Serverless Anti-Jebol (Vercel):** Memastikan arsitektur web tetap 100% terdistribusi di sisi klien agar limitasi fungsi eksekusi Vercel (10 detik pada *Hobby Tier*) tidak pernah tersentuh, mengizinkan skalabilitas tak terbatas secara gratis.
+- **Server-Side Rate Limiting via Vercel KV (Redis):** Meng-upgrade keamanan anti-spam yang tadinya mengandalkan *Browser LocalStorage/FingerprintJS* menjadi sistem basis data Redis (Vercel KV). Ini menambal kelemahan versi gratis di mana *user* nakal mencoba mereset limit 5x *upload* dengan cara membersihkan riwayat *cache* browser.
 - **Domain Bootstrapping & Cloudflare:** Peluncuran tahap awal menggunakan domain hemat biaya (`.my.id`) sebelum ditingkatkan ke domain premium (`.app`), dikombinasikan dengan manajemen DNS dan proteksi DDoS dari Cloudflare.
 - **Cloudflare Turnstile (Anti-Bot):** Implementasi tantangan transparan pengganti CAPTCHA di area unggah file untuk mencegah skrip robot menguras limit aplikasi.
+- **Aplikasi Mobile (Android Native):** Membungkus atau memigrasikan web Next.js ke platform *mobile* menggunakan *framework* seperti Capacitor atau React Native agar aplikasi Followins dapat didistribusikan dan diunduh langsung melalui Google Play Store.
 - **PWA (Progressive Web App):** Konfigurasi *manifest* yang mengizinkan web untuk diinstal langsung ke *Home Screen* perangkat seluler iOS dan Android, melewati kerumitan persetujuan *App Store/Play Store*.
 - **Optimasi SEO & Open Graph (OG Tags):** Injeksi meta tags dinamis (*thumbnail* khusus) agar tautan Followins terlihat premium dan meyakinkan saat dibagikan di platform media sosial seperti WhatsApp atau X (Twitter).

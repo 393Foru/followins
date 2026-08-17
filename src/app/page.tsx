@@ -24,6 +24,7 @@ import LoyalFollowers from '@/components/LoyalFollowers';
 import AccountHealthRatio from '@/components/AccountHealthRatio';
 import NewUnfollowersAlert from '@/components/NewUnfollowersAlert';
 import PendingRequests from '@/components/PendingRequests';
+import { PDFDownloadModal } from '@/components/pdf/PDFDownloadModal';
 import { parseInstagramZip, ParseResult } from '@/utils/instagramParser';
 import { saveHistory, HistoryRecord, saveLastScanData, getLastScanData, getUnlockedAccounts, addUnlockedAccount } from '@/utils/storage';
 
@@ -52,6 +53,7 @@ export default function Home() {
   const [newUnfollowers, setNewUnfollowers] = useState<string[]>([]);
   const [kutuLoncat, setKutuLoncat] = useState<string[]>([]);
   const [isFirstScan, setIsFirstScan] = useState(false);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   const isPremium = result ? getUnlockedAccounts().includes(result.ownerUsername || 'my_account') : false;
 
@@ -450,7 +452,7 @@ export default function Home() {
               </div>
               <div className="flex w-full lg:w-auto gap-2 md:gap-3 flex-col sm:flex-row print:hidden mt-2 lg:mt-0">
                 <button 
-                  onClick={() => window.print()}
+                  onClick={() => setIsPdfModalOpen(true)}
                   className="w-full sm:w-auto px-4 lg:px-6 py-2.5 lg:py-3 text-xs lg:text-sm font-medium rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors shadow-sm flex items-center justify-center gap-1.5 lg:gap-2 whitespace-nowrap"
                 >
                   <Printer className="w-4 h-4" />
@@ -569,6 +571,14 @@ export default function Home() {
         <div className="print:hidden">
           <Footer />
         </div>
+
+        <PDFDownloadModal 
+          isOpen={isPdfModalOpen} 
+          onClose={() => setIsPdfModalOpen(false)} 
+          isPremium={isPremium} 
+          data={result} 
+          language={language as 'en' | 'id'} 
+        />
       </div>
     </div>
   );
