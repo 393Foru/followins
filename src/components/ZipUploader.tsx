@@ -152,10 +152,15 @@ export default function ZipUploader({ onFileSelect }: ZipUploaderProps) {
             )}
           </div>
           <div>
-            <p className="text-xl md:text-2xl font-bold text-zinc-200 tracking-tight mb-3 leading-snug">
-              {isChecking ? (language === 'en' ? 'Checking limits...' : 'Mengecek batas...') : t('uploadPrompt')}
+            <p className="text-fluid-widget-title font-bold text-zinc-200 tracking-tight mb-3 leading-snug">
+              {isChecking ? (language === 'en' ? 'Checking limits...' : 'Mengecek batas...') : (
+                <>
+                  <span className="md:hidden">{language === 'en' ? 'Tap to select your Instagram .zip file' : 'Ketuk untuk pilih file .zip Instagram'}</span>
+                  <span className="hidden md:inline">{t('uploadPrompt')}</span>
+                </>
+              )}
             </p>
-            <p className="text-zinc-500 font-light max-w-md mx-auto leading-relaxed text-sm md:text-base">
+            <p className="text-zinc-500 font-light max-w-md mx-auto leading-relaxed text-fluid-sm">
               {isChecking ? '' : t('uploadDesc')}
             </p>
           </div>

@@ -29,8 +29,8 @@ export default function PendingRequests({ data }: PendingRequestsProps) {
           <UserCheck className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="font-bold text-lg text-zinc-900 tracking-tight">{t('pendingTitle')}</h3>
-          <p className="text-sm text-zinc-500">{t('pendingDesc')}</p>
+          <h3 className="font-bold text-fluid-widget-title text-zinc-900 tracking-tight">{t('pendingTitle')}</h3>
+          <p className="text-fluid-widget-desc text-zinc-500">{t('pendingDesc')}</p>
         </div>
       </div>
 

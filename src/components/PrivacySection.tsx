@@ -5,50 +5,47 @@ export default function PrivacySection() {
   const { t } = useLanguage();
 
   return (
-    <section className="w-full py-20 relative z-10">
+    <section className="w-full py-8 md:py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="flex flex-col lg:flex-row items-stretch bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm relative">
 
           <div className="w-full lg:w-1/2 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-zinc-200 relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-bold mb-8 border border-blue-200">
-              <ShieldCheck className="w-5 h-5" />
-              {t('privacyTitle')}
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-zinc-900 leading-tight">
+
+            <h2 className="text-fluid-h2 font-black mb-6 tracking-tight text-zinc-900 leading-tight">
               {t('privacyTitle')}
             </h2>
-            <p className="text-xl text-zinc-600 font-light mb-12 leading-relaxed">
+            <p className="text-fluid-subtitle text-zinc-600 font-light mb-12 leading-relaxed">
               {t('privacyDesc')}
             </p>
             
             <div className="space-y-8">
-              <div className="flex gap-6 items-start group">
-                <div className="w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <Code className="w-7 h-7" />
+              <div className="flex gap-4 md:gap-6 items-start group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Code className="w-6 h-6 md:w-7 md:h-7" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-zinc-900">{t('priv1Title')}</h3>
-                  <p className="text-zinc-600 font-light text-base leading-relaxed">{t('priv1Desc')}</p>
+                  <h3 className="text-fluid-h4 font-bold mb-1 md:mb-2 text-zinc-900">{t('priv1Title')}</h3>
+                  <p className="text-zinc-600 font-light text-sm md:text-base leading-relaxed">{t('priv1Desc')}</p>
                 </div>
               </div>
               
-              <div className="flex gap-6 items-start group">
-                <div className="w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <KeyRound className="w-7 h-7" />
+              <div className="flex gap-4 md:gap-6 items-start group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <KeyRound className="w-6 h-6 md:w-7 md:h-7" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-zinc-900">{t('priv2Title')}</h3>
-                  <p className="text-zinc-600 font-light text-base leading-relaxed">{t('priv2Desc')}</p>
+                  <h3 className="text-fluid-h4 font-bold mb-1 md:mb-2 text-zinc-900">{t('priv2Title')}</h3>
+                  <p className="text-zinc-600 font-light text-sm md:text-base leading-relaxed">{t('priv2Desc')}</p>
                 </div>
               </div>
               
-              <div className="flex gap-6 items-start group">
-                <div className="w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <ShieldCheck className="w-7 h-7" />
+              <div className="flex gap-4 md:gap-6 items-start group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <ShieldCheck className="w-6 h-6 md:w-7 md:h-7" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-zinc-900">{t('priv3Title')}</h3>
-                  <p className="text-zinc-600 font-light text-base leading-relaxed">{t('priv3Desc')}</p>
+                  <h3 className="text-fluid-h4 font-bold mb-1 md:mb-2 text-zinc-900">{t('priv3Title')}</h3>
+                  <p className="text-zinc-600 font-light text-sm md:text-base leading-relaxed">{t('priv3Desc')}</p>
                 </div>
               </div>
             </div>

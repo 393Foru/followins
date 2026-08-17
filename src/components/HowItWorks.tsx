@@ -28,24 +28,27 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="w-full max-w-7xl mx-auto py-20 px-6 md:px-12 relative z-10">
-      <div className="mb-12">
-        <h2 className="text-4xl md:text-6xl font-black text-zinc-900 mb-6 tracking-tight leading-tight">{t('howItWorksTitle')}</h2>
-        <p className="text-xl md:text-2xl text-zinc-600 font-light max-w-3xl leading-relaxed">{t('howItWorksDesc')}</p>
+    <section id="how-it-works" className="w-full max-w-7xl mx-auto py-8 md:py-20 px-6 md:px-12 relative z-10">
+      <div className="mb-8 md:mb-12 text-left">
+        <h2 className="text-fluid-h2 font-black text-zinc-900 mb-6 tracking-tight leading-tight">{t('howItWorksTitle')}</h2>
+        <p className="text-fluid-subtitle text-zinc-600 font-light leading-relaxed">{t('howItWorksDesc')}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
         {steps.map((step, idx) => (
-          <div key={idx} className="group relative flex flex-col items-start p-8 rounded-2xl bg-zinc-900 border border-zinc-800 transition-all shadow-lg overflow-hidden hover:border-emerald-500/50">
+          <div key={idx} className="group relative flex flex-row lg:flex-col items-start gap-4 lg:gap-0 p-5 lg:p-8 rounded-2xl bg-zinc-900 border border-zinc-800 transition-all shadow-lg overflow-hidden hover:border-emerald-500/50">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
             
-            <div className="absolute top-4 right-6 text-6xl font-black text-zinc-800/40 group-hover:text-zinc-700/50 transition-colors select-none z-10">0{idx + 1}</div>
+            <div className="absolute top-2 right-3 lg:top-4 lg:right-6 text-fluid-h1 font-black text-zinc-800/40 group-hover:text-zinc-700/50 transition-colors select-none z-10 pointer-events-none">0{idx + 1}</div>
               
-            <div className="mb-8 w-14 h-14 rounded-xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 group-hover:border-emerald-500/40 transition-all [&>svg]:text-emerald-500 relative z-10">
+            <div className="w-12 h-12 lg:w-14 lg:h-14 shrink-0 rounded-xl flex items-center justify-center mb-0 lg:mb-8 bg-emerald-500/10 border border-emerald-500/20 group-hover:border-emerald-500/40 transition-all [&>svg]:w-5 [&>svg]:h-5 lg:[&>svg]:w-8 lg:[&>svg]:h-8 [&>svg]:text-emerald-500 relative z-20">
               {step.icon}
             </div>
-            <h3 className="text-xl font-bold mb-3 text-zinc-100 tracking-tight relative z-10">{step.title}</h3>
-            <p className="font-light text-zinc-400 leading-relaxed text-base relative z-10">{step.desc}</p>
+            
+            <div className="relative z-20 pr-6 lg:pr-0">
+              <h3 className="text-fluid-h4 font-bold mb-2 lg:mb-3 text-zinc-100 tracking-tight">{step.title}</h3>
+              <p className="font-light text-zinc-400 leading-relaxed text-sm lg:text-base">{step.desc}</p>
+            </div>
           </div>
         ))}
       </div>

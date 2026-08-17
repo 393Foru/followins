@@ -33,11 +33,11 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-between p-4 md:px-12 bg-white sticky top-0 z-50 border-b border-zinc-200 h-20 shadow-sm transition-colors duration-300">
-      <div className="flex items-center gap-3 cursor-pointer group" onClick={scrollToTop}>
+      <div className="flex items-center gap-2 md:gap-3 cursor-pointer group" onClick={scrollToTop}>
         <div className="bg-zinc-900 text-white p-2 rounded-lg shadow-sm group-hover:bg-zinc-800 transition-colors">
-          <Camera size={28} />
+          <Camera className="w-6 h-6 md:w-7 md:h-7" />
         </div>
-        <span className="font-bold text-2xl tracking-tight text-zinc-900">
+        <span className="font-bold text-fluid-h3 tracking-tight text-zinc-900">
           FOLLOWINS
         </span>
       </div>

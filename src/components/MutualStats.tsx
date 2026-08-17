@@ -14,41 +14,47 @@ export default function MutualStats({ data }: MutualStatsProps) {
   if (total === 0) return null;
 
   return (
-    <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-2xl lg:rounded-3xl p-5 lg:p-8 shadow-sm relative overflow-hidden">
       
-      <div className="relative z-10 mb-8 border-b border-zinc-200 pb-6">
-        <h3 className="text-2xl font-bold text-zinc-900 tracking-tight mb-2">{t('mutualStatsTitle')}</h3>
-        <p className="text-sm text-zinc-600 font-light max-w-2xl">
+      <div className="relative z-10 mb-4 pb-4 lg:mb-8 lg:pb-6 border-b border-zinc-200">
+        <h3 className="text-fluid-widget-title font-bold text-zinc-900 tracking-tight mb-1 lg:mb-2">{t('mutualStatsTitle')}</h3>
+        <p className="text-fluid-widget-desc text-zinc-600 font-light max-w-2xl">
           {t('mutualStatsDesc1')} <span className="text-zinc-900 font-bold font-mono px-2 py-0.5 bg-zinc-100 rounded border border-zinc-200 mx-1">{formatCompactNumber(total)}</span> {t('mutualStatsDesc2')}
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 pt-4 pb-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 relative z-10 pt-2 lg:pt-4 pb-2">
         {/* You First */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left group w-full">
-          <div className="text-4xl md:text-5xl xl:text-6xl font-black font-mono tracking-tight text-teal-600 mb-3 leading-tight group-hover:text-teal-500 transition-colors w-full break-words" title={data.youFirst.toString()}>
+        <div className="flex flex-row lg:flex-col items-center lg:items-start text-left group w-full gap-4 lg:gap-0">
+          <div className="text-4xl lg:text-6xl font-black font-mono tracking-tight text-teal-600 lg:mb-3 leading-tight group-hover:text-teal-500 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.youFirst.toString()}>
             {formatCompactNumber(data.youFirst)}
           </div>
-          <div className="text-xs lg:text-sm font-bold uppercase tracking-widest text-zinc-900 font-mono mb-2">{t('youFirst')}</div>
-          <div className="text-sm text-zinc-500 font-light leading-relaxed">{t('youFirstDesc')}</div>
+          <div className="flex flex-col flex-1">
+            <div className="text-xs lg:text-sm font-bold uppercase tracking-wider lg:tracking-widest text-zinc-900 font-mono mb-0.5 lg:mb-2">{t('youFirst')}</div>
+            <div className="text-xs sm:text-sm text-zinc-500 font-light leading-tight md:leading-relaxed">{t('youFirstDesc')}</div>
+          </div>
         </div>
         
         {/* Same Day */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left border-t md:border-t-0 md:border-l border-zinc-200 pt-6 md:pt-0 md:pl-6 group w-full">
-          <div className="text-4xl md:text-5xl xl:text-6xl font-black font-mono tracking-tight text-emerald-500 mb-3 leading-tight group-hover:text-emerald-400 transition-colors w-full break-words" title={data.sameDay.toString()}>
+        <div className="flex flex-row lg:flex-col items-center lg:items-start text-left border-t lg:border-t-0 lg:border-l border-zinc-200 pt-3 lg:pt-0 lg:pl-6 group w-full gap-4 lg:gap-0">
+          <div className="text-4xl lg:text-6xl font-black font-mono tracking-tight text-emerald-500 lg:mb-3 leading-tight group-hover:text-emerald-400 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.sameDay.toString()}>
             {formatCompactNumber(data.sameDay)}
           </div>
-          <div className="text-xs lg:text-sm font-bold uppercase tracking-widest text-zinc-900 font-mono mb-2">{t('sameDay')}</div>
-          <div className="text-sm text-zinc-500 font-light leading-relaxed">{t('sameDayDesc')}</div>
+          <div className="flex flex-col flex-1">
+            <div className="text-xs lg:text-sm font-bold uppercase tracking-wider lg:tracking-widest text-zinc-900 font-mono mb-0.5 lg:mb-2">{t('sameDay')}</div>
+            <div className="text-xs sm:text-sm text-zinc-500 font-light leading-tight md:leading-relaxed">{t('sameDayDesc')}</div>
+          </div>
         </div>
 
         {/* Them First */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left border-t md:border-t-0 md:border-l border-zinc-200 pt-6 md:pt-0 md:pl-6 group w-full">
-          <div className="text-4xl md:text-5xl xl:text-6xl font-black font-mono tracking-tight text-zinc-400 mb-3 leading-tight group-hover:text-zinc-500 transition-colors w-full break-words" title={data.themFirst.toString()}>
+        <div className="flex flex-row lg:flex-col items-center lg:items-start text-left border-t lg:border-t-0 lg:border-l border-zinc-200 pt-3 lg:pt-0 lg:pl-6 group w-full gap-4 lg:gap-0">
+          <div className="text-4xl lg:text-6xl font-black font-mono tracking-tight text-zinc-400 lg:mb-3 leading-tight group-hover:text-zinc-500 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.themFirst.toString()}>
             {formatCompactNumber(data.themFirst)}
           </div>
-          <div className="text-xs lg:text-sm font-bold uppercase tracking-widest text-zinc-900 font-mono mb-2">{t('themFirst')}</div>
-          <div className="text-sm text-zinc-500 font-light leading-relaxed">{t('themFirstDesc')}</div>
+          <div className="flex flex-col flex-1">
+            <div className="text-xs lg:text-sm font-bold uppercase tracking-wider lg:tracking-widest text-zinc-900 font-mono mb-0.5 lg:mb-2">{t('themFirst')}</div>
+            <div className="text-xs sm:text-sm text-zinc-500 font-light leading-tight md:leading-relaxed">{t('themFirstDesc')}</div>
+          </div>
         </div>
       </div>
 

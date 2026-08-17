@@ -152,59 +152,63 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
   return (
     <div className="w-full bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm flex flex-col h-full relative z-10">
       
-      <div className="flex flex-col md:flex-row border-b border-zinc-200 bg-zinc-50">
+      <div className="flex flex-row w-full border-b border-zinc-200 bg-zinc-50 overflow-x-auto hide-scrollbar">
         <button
-          className={`flex-1 py-4 text-center font-bold text-base md:text-lg transition-colors border-r border-zinc-200 ${
+          className={`flex-1 min-w-max px-4 sm:min-w-[120px] py-3 md:py-4 text-center font-bold text-xs sm:text-sm md:text-lg transition-colors border-r border-zinc-200 whitespace-nowrap ${
             activeTab === 'unfollowers' ? 'bg-white text-zinc-900 shadow-[inset_0_-2px_0_0_#52525b]' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
           }`}
           onClick={() => handleTabChange('unfollowers')}
         >
-          Unfollowers <span className="font-mono text-sm text-zinc-400 ml-1">({formatCompactNumber(totalUnfollowersCount)})</span>
+          Unfollowers <span className="font-mono text-[10px] sm:text-xs md:text-sm text-zinc-400 ml-1">({formatCompactNumber(totalUnfollowersCount)})</span>
         </button>
         <button
-          className={`flex-1 py-4 text-center font-bold text-base md:text-lg transition-colors border-r border-zinc-200 ${
+          className={`flex-1 min-w-max px-4 sm:min-w-[120px] py-3 md:py-4 text-center font-bold text-xs sm:text-sm md:text-lg transition-colors border-r border-zinc-200 whitespace-nowrap ${
             activeTab === 'fans' ? 'bg-white text-teal-600 shadow-[inset_0_-2px_0_0_#14b8a6]' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
           }`}
           onClick={() => handleTabChange('fans')}
         >
-          Fans <span className="font-mono text-sm text-teal-400 ml-1">({formatCompactNumber(totalFansCount)})</span>
+          Fans <span className="font-mono text-[10px] sm:text-xs md:text-sm text-teal-400 ml-1">({formatCompactNumber(totalFansCount)})</span>
         </button>
         <button
-          className={`flex-1 py-4 text-center font-bold text-base md:text-lg transition-colors ${
+          className={`flex-1 min-w-max px-4 sm:min-w-[120px] py-3 md:py-4 text-center font-bold text-xs sm:text-sm md:text-lg transition-colors whitespace-nowrap ${
             activeTab === 'mutuals' ? 'bg-white text-indigo-600 shadow-[inset_0_-2px_0_0_#4f46e5]' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
           }`}
           onClick={() => handleTabChange('mutuals')}
         >
-          Mutuals <span className="font-mono text-sm text-indigo-400 ml-1">({formatCompactNumber(totalMutualsCount)})</span>
+          Mutuals <span className="font-mono text-[10px] sm:text-xs md:text-sm text-indigo-400 ml-1">({formatCompactNumber(totalMutualsCount)})</span>
         </button>
       </div>
       
       <div className="p-6 md:p-10 relative flex-1 flex flex-col">
         {selectedUsers.length > 0 && (
           <div className="fixed bottom-6 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 z-[100] bg-zinc-900 text-white p-4 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xl border border-zinc-700 md:min-w-[600px]">
-            <div className="flex items-center gap-3">
-              <span className="font-mono bg-zinc-800 px-2.5 py-1 rounded-lg text-zinc-300 font-bold">{selectedUsers.length}</span>
-              <span className="font-medium text-sm">{language === 'en' ? 'Accounts Selected' : 'Akun Dipilih'}</span>
+            {/* Close button - Absolute on mobile, inline on desktop */}
+            <button 
+              onClick={() => setSelectedUsers([])}
+              className="absolute top-3 right-3 md:static md:top-auto md:right-auto p-1.5 md:p-2 bg-zinc-800 md:bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-700 md:hover:bg-transparent rounded-lg transition-colors order-first md:order-last"
+              title={language === 'en' ? "Cancel selection" : "Batal pilih"}
+            >
+              <X className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 pr-8 md:pr-0 w-full md:w-auto">
+              <span className="font-mono bg-zinc-800 px-2.5 py-1 rounded-lg text-zinc-300 font-bold shrink-0">{selectedUsers.length}</span>
+              <span className="font-medium text-sm truncate">{language === 'en' ? 'Accounts Selected' : 'Akun Dipilih'}</span>
             </div>
+            
             <div className="flex items-center gap-2 w-full md:w-auto">
               <input 
                 type="text"
                 placeholder={language === 'en' ? "Type a label..." : "Ketik label..."}
-                className="bg-zinc-800 border border-zinc-700 text-white rounded-lg px-3 py-2 text-sm flex-1 md:w-64 focus:outline-none focus:border-teal-500"
+                className="bg-zinc-800 border border-zinc-700 text-white rounded-lg px-3 py-2 text-sm flex-1 min-w-0 md:w-64 focus:outline-none focus:border-teal-500"
                 value={bulkLabelValue}
                 onChange={(e) => setBulkLabelValue(e.target.value)}
               />
               <button 
                 onClick={applyBulkLabel}
-                className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                className="bg-teal-600 hover:bg-teal-500 text-white px-3 py-2 md:px-4 rounded-lg text-sm font-medium transition-colors shrink-0"
               >
                 {language === 'en' ? 'Apply' : 'Terapkan'}
-              </button>
-              <button 
-                onClick={() => setSelectedUsers([])}
-                className="p-2 text-zinc-400 hover:text-white transition-colors"
-              >
-                <X className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -212,18 +216,18 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
 
         {/* Gamification Progress Bar */}
         <div className="mb-8 w-full">
-          <div className="flex justify-between items-end mb-2">
-            <div>
-              <h4 className="font-bold text-zinc-800 text-sm md:text-base">
+          <div className="flex justify-between items-end mb-2 gap-2">
+            <div className="min-w-0">
+              <h4 className="font-bold text-zinc-800 text-fluid-widget-title truncate">
                 {language === 'en' ? 'Cleanup Progress' : 'Progres Beres-beres'}
               </h4>
-              <p className="text-xs text-zinc-500">
+              <p className="text-[11px] sm:text-xs md:text-sm text-zinc-500 line-clamp-2 leading-tight">
                 {language === 'en' 
                   ? `${labeledCount} of ${currentList.length} accounts labeled`
                   : `${labeledCount} dari ${currentList.length} akun telah dilabeli`}
               </p>
             </div>
-            <span className="font-mono font-black text-teal-600 text-lg md:text-xl">
+            <span className="font-mono font-black text-teal-600 text-2xl md:text-3xl shrink-0">
               {progressPercent}%
             </span>
           </div>
@@ -237,8 +241,12 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-zinc-200 pb-4 relative z-10">
           <div className="flex flex-col gap-2">
-            <p className="text-base text-zinc-600 font-light flex items-center gap-2">
-              {t('showing')} <span className="text-xl font-bold font-mono text-zinc-900">{formatCompactNumber(displayList.length)}</span> {t('from')} <span className="font-medium font-mono text-zinc-900">{formatCompactNumber(realFilteredCount)}</span> {t('accounts')}
+            <p className="text-sm md:text-base text-zinc-600 font-light flex flex-wrap items-center gap-x-1.5 gap-y-1">
+              <span>{t('showing')}</span> 
+              <span className="text-lg md:text-xl font-bold font-mono text-zinc-900">{formatCompactNumber(displayList.length)}</span> 
+              <span>{t('from')}</span> 
+              <span className="font-medium font-mono text-zinc-900">{formatCompactNumber(realFilteredCount)}</span> 
+              <span>{t('accounts')}</span>
             </p>
             <div className="flex items-center gap-2 text-sm">
               <button 
@@ -253,7 +261,7 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
           
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full md:w-auto">
             {/* Search Bar */}
-            <div className="relative">
+            <div className="relative w-full md:w-auto">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="w-4 h-4 text-zinc-400" />
               </div>
@@ -266,34 +274,37 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
               />
             </div>
 
-            {/* Filter Dropdown */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-zinc-400 hidden md:block" />
+            {/* Grid Container for Dropdowns on Mobile, Flex on Desktop */}
+            <div className="grid grid-cols-2 gap-3 w-full md:flex md:flex-row md:w-auto">
+              {/* Filter Dropdown */}
+              <div className="flex items-center gap-2 w-full">
+                <Filter className="w-4 h-4 text-zinc-400 hidden md:block" />
+                <select 
+                  className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-[13px] md:text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 font-medium cursor-pointer"
+                  value={labelFilter}
+                  onChange={(e) => setLabelFilter(e.target.value)}
+                >
+                  <option value="all">{language === 'en' ? 'All Accounts' : 'Semua Akun'}</option>
+                  <option value="unlabeled">{language === 'en' ? 'No Label' : 'Tanpa Label'}</option>
+                  {uniqueLabelsUsed.length > 0 && <optgroup label="Labels">
+                    {uniqueLabelsUsed.map((lbl, i) => (
+                      <option key={i} value={lbl}>{lbl}</option>
+                    ))}
+                  </optgroup>}
+                </select>
+              </div>
+
+              {/* Sort Dropdown */}
               <select 
-                className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full md:w-auto p-2.5 font-medium cursor-pointer"
-                value={labelFilter}
-                onChange={(e) => setLabelFilter(e.target.value)}
+                className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-[13px] md:text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 font-medium cursor-pointer"
+                value={sortBy}
+                onChange={(e) => handleSortChange(e.target.value)}
               >
-                <option value="all">{language === 'en' ? 'All Accounts' : 'Semua Akun'}</option>
-                <option value="unlabeled">{language === 'en' ? 'Not Labeled' : 'Belum Dilabeli'}</option>
-                {uniqueLabelsUsed.length > 0 && <optgroup label="Labels">
-                  {uniqueLabelsUsed.map((lbl, i) => (
-                    <option key={i} value={lbl}>{lbl}</option>
-                  ))}
-                </optgroup>}
+                <option value="random">{language === 'en' ? 'Random' : 'Acak (Bawaan)'}</option>
+                <option value="asc">{language === 'en' ? 'A to Z' : 'A sampai Z'}{!isPremium && ' 🔒'}</option>
+                <option value="desc">{language === 'en' ? 'Z to A' : 'Z sampai A'}{!isPremium && ' 🔒'}</option>
               </select>
             </div>
-
-            {/* Sort Dropdown */}
-            <select 
-              className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full md:w-auto p-2.5 font-medium cursor-pointer"
-              value={sortBy}
-              onChange={(e) => handleSortChange(e.target.value)}
-            >
-              <option value="random">{language === 'en' ? 'Random (Default)' : 'Acak (Bawaan)'}</option>
-              <option value="asc">{language === 'en' ? 'A to Z' : 'A sampai Z'}{!isPremium && ' 🔒'}</option>
-              <option value="desc">{language === 'en' ? 'Z to A' : 'Z sampai A'}{!isPremium && ' 🔒'}</option>
-            </select>
           </div>
           
           {!isPremium && totalHidden > 0 && (
@@ -312,6 +323,7 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
             return (
               <UserListItem 
                 key={idx}
+                index={idx + 1}
                 user={user}
                 isEditing={isEditing}
                 currentLabel={currentLabel}
@@ -342,8 +354,8 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
         {!isPremium && totalHidden > 0 && (
           <div className="mt-12 text-center p-8 md:p-10 bg-white border border-zinc-200 rounded-3xl relative overflow-hidden z-10 shadow-lg">
             <Lock className="mx-auto text-zinc-400 mb-4 opacity-80" size={48} />
-            <h4 className="text-3xl md:text-4xl font-black font-mono text-zinc-900 mb-3 tracking-tight leading-tight">{t('hiddenNames1')} <span className="text-teal-600">{formatCompactNumber(totalHidden)}</span> {t('hiddenNames2')}</h4>
-            <p className="text-base md:text-lg text-zinc-600 font-light max-w-2xl mx-auto mb-8 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('hiddenDesc') }} />
+            <h4 className="text-fluid-h2 font-black font-mono text-zinc-900 mb-3 tracking-tight leading-tight">{t('hiddenNames1')} <span className="text-teal-600">{formatCompactNumber(totalHidden)}</span> {t('hiddenNames2')}</h4>
+            <p className="text-fluid-p text-zinc-600 font-light max-w-2xl mx-auto mb-8 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('hiddenDesc') }} />
             <button 
               onClick={() => setIsModalOpen(true)}
               className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-medium shadow-sm transition-colors text-lg flex items-center gap-3 mx-auto"

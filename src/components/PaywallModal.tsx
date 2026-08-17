@@ -51,14 +51,14 @@ export default function PaywallModal({ isOpen, onClose, onSuccess }: PaywallModa
             <QrCode size={28} />
           </div>
           
-          <h3 className="text-2xl font-extrabold text-zinc-900 mb-2">Buka Semua Akses</h3>
+          <h3 className="text-fluid-h2 font-extrabold text-zinc-900 mb-2">Buka Semua Akses</h3>
           <p className="text-sm text-zinc-600 mb-6">
             Dukung pengembangan aplikasi ini dengan donasi satu kali bayar (seumur hidup). Semua nama yang disamarkan akan otomatis terbuka.
           </p>
 
           <div className="bg-zinc-50 p-5 rounded-2xl border border-zinc-200 mb-6">
             <p className="text-sm font-semibold text-zinc-500 mb-1">Total Pembayaran</p>
-            <p className="text-3xl font-black text-zinc-900 mb-4">Rp 15.000</p>
+            <p className="text-fluid-h2 font-black text-zinc-900 mb-4">Rp 15.000</p>
             
             {/* Simulasi Gambar QRIS */}
             <div className="w-40 h-40 bg-white border-2 border-dashed border-zinc-300 rounded-xl mx-auto flex flex-col items-center justify-center text-zinc-500 gap-2 mb-3">

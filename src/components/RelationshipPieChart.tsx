@@ -38,24 +38,24 @@ export default function RelationshipPieChart({ unfollowers, fans, mutuals }: Rel
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-2xl lg:rounded-3xl p-5 lg:p-8 shadow-sm relative overflow-hidden">
       
-      <div className="relative z-10 mb-8 border-b border-zinc-200 pb-6">
-        <h3 className="text-2xl font-bold text-zinc-900 tracking-tight mb-2">{t('relTitle')}</h3>
-        <p className="text-sm text-zinc-600 font-light max-w-2xl">
+      <div className="relative z-10 mb-4 lg:mb-8 border-b border-zinc-200 pb-4 lg:pb-6">
+        <h3 className="text-fluid-widget-title font-bold text-zinc-900 tracking-tight mb-1 lg:mb-2">{t('relTitle')}</h3>
+        <p className="text-fluid-widget-desc text-zinc-600 font-light max-w-2xl">
           {t('relDesc')}
         </p>
       </div>
       
-      <div className="h-80 w-full flex justify-center items-center relative z-10">
+      <div className="h-48 lg:h-80 w-full flex justify-center items-center relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={filteredData}
               cx="50%"
               cy="50%"
-              innerRadius={70} // Make it a donut chart for a more modern look
-              outerRadius={120}
+              innerRadius="50%"
+              outerRadius="80%"
               labelLine={false}
               label={renderCustomizedLabel}
               dataKey="value"
@@ -71,9 +71,18 @@ export default function RelationshipPieChart({ unfollowers, fans, mutuals }: Rel
               contentStyle={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e4e4e7', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontFamily: 'monospace' }}
               itemStyle={{ fontWeight: 'bold', color: '#18181b' }}
             />
-            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
           </PieChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Custom Responsive Legend */}
+      <div className="flex flex-col sm:flex-row flex-wrap justify-center items-start sm:items-center gap-3 sm:gap-6 mt-4 w-full relative z-10 px-2">
+        {filteredData.map((item, index) => (
+          <div key={index} className="flex items-center gap-2.5 text-xs sm:text-sm text-zinc-600 font-medium">
+            <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }}></span>
+            <span>{item.name}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

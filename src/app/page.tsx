@@ -293,15 +293,15 @@ export default function Home() {
           {status === 'idle' && (
             <>
               {/* Clean Minimalist Hero */}
-              <div className="w-full flex flex-col lg:flex-row items-center justify-center px-6 pt-10 pb-20 md:px-10 lg:px-16 gap-8 lg:gap-12">
+              <div className="w-full flex flex-col md:flex-row items-center justify-center px-6 pt-10 pb-12 md:pb-20 md:px-10 md:px-16 gap-8 md:gap-12">
                 
                 {/* Left Column */}
-                <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10 text-center lg:text-left lg:pr-4">
+                <div className="w-full md:w-1/2 flex flex-col justify-center relative z-10 text-left md:pr-4">
                   <motion.h1 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight mb-6 leading-[1.1]"
+                    className="text-fluid-h1 font-black tracking-tight mb-6 leading-[1.1]"
                   >
                     <span className="text-zinc-900">
                       {t('heroTitle1')}
@@ -316,7 +316,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="text-lg md:text-xl text-zinc-600 max-w-xl leading-relaxed mx-auto lg:mx-0 font-light mb-8"
+                    className="text-fluid-p text-zinc-600 max-w-xl leading-relaxed mx-0 font-light mb-8"
                   >
                     {t('heroDesc')}
                   </motion.p>
@@ -326,7 +326,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 sm:gap-6 text-sm font-medium text-zinc-700"
+                    className="flex flex-wrap items-center justify-start gap-3 sm:gap-6 text-sm font-medium text-zinc-700"
                   >
                     <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
                       <ShieldCheck className="w-4 h-4 text-emerald-500" />
@@ -348,7 +348,7 @@ export default function Home() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
-                  className="w-full lg:w-1/2 flex flex-col items-center lg:items-end justify-center relative z-10"
+                  className="w-full md:w-1/2 flex flex-col items-center md:items-end justify-center relative z-10"
                 >
                   <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-xl p-6 md:p-8 shadow-sm relative overflow-hidden">
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
@@ -378,17 +378,25 @@ export default function Home() {
               <HistoryWidget onRestore={handleRestore} />
             </motion.div>
             
+            <hr className="w-full border-zinc-300" />
+
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
               <HowItWorks />
             </motion.div>
+
+            <hr className="w-full border-zinc-300" />
 
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
               <Features />
             </motion.div>
 
+            <hr className="w-full border-zinc-300" />
+
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
               <PrivacySection />
             </motion.div>
+
+            <hr className="w-full border-zinc-300" />
 
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6 }}>
               <FAQ />
@@ -397,13 +405,13 @@ export default function Home() {
         )}
 
         {status === 'loading' && (
-          <div className="w-full flex justify-center py-20 px-6">
+          <div className="w-full flex justify-center py-8 md:py-20 px-6">
             <LoadingScreen />
           </div>
         )}
 
         {status === 'done' && result && (
-          <div className="w-full flex flex-col gap-5 items-center px-4 md:px-8 pt-8 pb-20 max-w-[1400px] mx-auto">
+          <div className="w-full flex flex-col gap-5 items-center px-4 md:px-8 pt-8 pb-12 md:pb-20 max-w-[1400px] mx-auto">
             <div className="w-full flex justify-start mb-2 print:hidden">
               <button 
                 onClick={() => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
@@ -416,27 +424,27 @@ export default function Home() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 bg-white border border-zinc-200 rounded-xl p-8 shadow-sm"
+              className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-6 pb-6 bg-white border border-zinc-200 rounded-xl p-6 md:p-8 shadow-sm"
             >
               <div>
-                <h2 className="text-4xl md:text-5xl font-black text-zinc-900 tracking-tight">
+                <h2 className="text-fluid-h2 font-black text-zinc-900 tracking-tight">
                   {result.ownerUsername ? `@${result.ownerUsername}` : t('summaryTitle')}
                 </h2>
                 <p className="text-xl text-zinc-600 font-light mt-4">
                   {result.ownerUsername ? `${t('summaryTitle')} • ${t('summaryDesc')}` : t('summaryDesc')}
                 </p>
               </div>
-              <div className="flex w-full md:w-auto gap-3 flex-col md:flex-row print:hidden">
+              <div className="flex w-full lg:w-auto gap-2 md:gap-3 flex-col sm:flex-row print:hidden mt-2 lg:mt-0">
                 <button 
                   onClick={() => window.print()}
-                  className="px-6 py-3 text-sm font-medium rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors shadow-sm flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-4 lg:px-6 py-2.5 lg:py-3 text-xs lg:text-sm font-medium rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors shadow-sm flex items-center justify-center gap-1.5 lg:gap-2 whitespace-nowrap"
                 >
                   <Printer className="w-4 h-4" />
                   {language === 'en' ? 'Save PDF' : 'Simpan PDF'}
                 </button>
                 <button 
                   onClick={resetApp}
-                  className="px-8 py-3 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors shadow-sm"
+                  className="w-full sm:w-auto px-4 lg:px-8 py-2.5 lg:py-3 text-xs lg:text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors shadow-sm whitespace-nowrap flex items-center justify-center"
                 >
                   {t('checkAnotherBtn')}
                 </button>
@@ -483,8 +491,8 @@ export default function Home() {
               />
             </motion.div>
 
-            <div className="w-full flex flex-col lg:flex-row gap-5 items-stretch">
-              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+            <div className="w-full flex flex-col md:flex-row gap-5 items-stretch">
+              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full md:w-1/2 flex">
                 <RelationshipPieChart 
                   unfollowers={result.totalUnfollowersCount || result.unfollowers.length}
                   fans={result.totalFansCount || result.fans.length}
@@ -492,7 +500,7 @@ export default function Home() {
                 />
               </motion.div>
               
-              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full md:w-1/2 flex">
                 <MutualStats data={result.mutualStats} />
               </motion.div>
             </div>
@@ -501,15 +509,15 @@ export default function Home() {
               <GrowthChart data={result.timeline} />
             </motion.div>
 
-            <div className="w-full flex flex-col lg:flex-row gap-5 items-stretch">
-              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+            <div className="w-full flex flex-col md:flex-row gap-5 items-stretch">
+              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full md:w-1/2 flex">
                 <AccountHealthRatio 
                   followers={result.followersCount} 
                   following={result.followingCount} 
                 />
               </motion.div>
               
-              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full lg:w-1/2 flex">
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} className="w-full md:w-1/2 flex">
                 <LoyalFollowers data={result.oldestFollowers} />
               </motion.div>
             </div>

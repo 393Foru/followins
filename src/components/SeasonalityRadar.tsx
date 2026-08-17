@@ -68,7 +68,7 @@ export default function SeasonalityRadar({ data }: SeasonalityRadarProps) {
         )
       }
     >
-      <div className="h-96 w-full mt-auto relative z-10">
+      <div className="h-72 md:h-96 w-full relative z-10 flex items-center justify-center">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
             <PolarGrid stroke="#e4e4e7" />

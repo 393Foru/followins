@@ -246,7 +246,7 @@ export const parseInstagramZip = async (file: File): Promise<ParseResult> => {
   const oldestFollowers = [...followersList]
     .filter(f => f.timestamp > 0)
     .sort((a, b) => a.timestamp - b.timestamp)
-    .slice(0, 5)
+    .slice(0, 10)
     .map(f => ({ username: obfuscate(f.username), timestamp: f.timestamp }));
 
   return {

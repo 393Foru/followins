@@ -13,10 +13,10 @@ export default function FAQ() {
   ];
 
   return (
-    <section id="faq" className="w-full max-w-4xl mx-auto py-20 px-6 md:px-12 relative z-10">
-      <div className="mb-12 text-center">
-        <h2 className="text-4xl md:text-6xl font-black text-zinc-900 mb-6 tracking-tight leading-tight">{t('faqTitle')}</h2>
-        <p className="text-xl md:text-2xl text-zinc-600 font-light max-w-3xl mx-auto leading-relaxed">{t('faqDesc')}</p>
+    <section id="faq" className="w-full max-w-4xl mx-auto py-8 md:py-20 px-6 md:px-12 relative z-10">
+      <div className="mb-8 md:mb-12 text-left">
+        <h2 className="text-fluid-h2 font-black text-zinc-900 mb-6 tracking-tight leading-tight">{t('faqTitle')}</h2>
+        <p className="text-fluid-subtitle text-zinc-600 font-light leading-relaxed">{t('faqDesc')}</p>
       </div>
 
       <div className="space-y-4">
@@ -31,7 +31,7 @@ export default function FAQ() {
               onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
               className="w-full p-6 md:p-8 flex items-center justify-between text-left focus:outline-none relative z-10"
             >
-              <span className={`font-bold text-lg md:text-xl tracking-tight pr-8 ${openIdx === idx ? 'text-emerald-400' : 'text-zinc-100'}`}>
+              <span className={`font-bold text-fluid-h4 tracking-tight pr-8 ${openIdx === idx ? 'text-emerald-400' : 'text-zinc-100'}`}>
                 {faq.q}
               </span>
               <ChevronDown className={`w-6 h-6 transition-transform duration-300 shrink-0 ${openIdx === idx ? 'rotate-180 text-emerald-500' : 'text-zinc-500'}`} />

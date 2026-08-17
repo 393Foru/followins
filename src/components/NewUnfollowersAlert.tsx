@@ -33,11 +33,11 @@ export default function NewUnfollowersAlert({ newUnfollowers, kutuLoncat, isFirs
               <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg border border-indigo-200 dark-icon-indigo">
                 <Bookmark className="w-5 h-5" />
               </div>
-              <h2 className="text-2xl font-bold text-indigo-900 dark-title tracking-tight">
+              <h2 className="text-fluid-widget-title font-bold text-indigo-900 dark-title tracking-tight">
                 {language === 'en' ? 'First Scan Saved!' : 'Riwayat Pertama Disimpan!'}
               </h2>
             </div>
-            <p className="text-indigo-700 dark-desc max-w-2xl text-sm md:text-base mt-3">
+            <p className="text-indigo-700 dark-desc max-w-2xl text-fluid-widget-desc mt-3">
               {language === 'en' 
                 ? 'Come back next month or whenever you feel your followers count has changed, and upload your new ZIP. We will automatically track who unfollowed you and detect any "Hit & Run" accounts!' 
                 : 'Kembalilah bulan depan, atau kapanpun Anda merasa ada perubahan jumlah followers. Unggah ZIP terbaru Anda di sini, dan kami akan melacak siapa saja yang baru unfollow Anda serta mendeteksi akun "Kutu Loncat"!'}
@@ -65,11 +65,11 @@ export default function NewUnfollowersAlert({ newUnfollowers, kutuLoncat, isFirs
               <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg border border-emerald-200 dark-icon-emerald">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h2 className="text-2xl font-bold text-emerald-900 dark-title tracking-tight">
+              <h2 className="text-fluid-widget-title font-bold text-emerald-900 dark-title tracking-tight">
                 {language === 'en' ? 'All Clear!' : 'Aman Terkendali!'}
               </h2>
             </div>
-            <p className="text-emerald-700 dark-desc max-w-2xl text-sm md:text-base mt-3">
+            <p className="text-emerald-700 dark-desc max-w-2xl text-fluid-widget-desc mt-3">
               {language === 'en' 
                 ? 'No new unfollowers detected since your last scan. Your followers are staying loyal! Whenever you feel your followers count has changed, feel free to come back and check it here.' 
                 : 'Tidak ada unfollower baru yang terdeteksi sejak pemindaian terakhir Anda. Followers Anda masih setia! Kapan pun Anda merasa jumlah followers berubah, silakan kembali untuk mengeceknya lagi di sini.'}
@@ -96,11 +96,11 @@ export default function NewUnfollowersAlert({ newUnfollowers, kutuLoncat, isFirs
             <div className="p-2 bg-rose-100 text-rose-600 rounded-lg border border-rose-200 dark-icon-rose animate-pulse">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <h2 className="text-2xl font-bold text-rose-900 dark-title tracking-tight">
+            <h2 className="text-fluid-widget-title font-bold text-rose-900 dark-title tracking-tight">
               {language === 'en' ? 'New Unfollowers Detected!' : 'Unfollowers Baru Terdeteksi!'}
             </h2>
           </div>
-          <p className="text-rose-700 dark-desc max-w-2xl text-sm md:text-base mt-3">
+          <p className="text-rose-700 dark-desc max-w-2xl text-fluid-widget-desc mt-3">
             {language === 'en' 
               ? `Since your last scan, ${newUnfollowers.length} account(s) have unfollowed you.` 
               : `Sejak pemindaian terakhir Anda, ada ${newUnfollowers.length} akun yang baru saja berhenti mengikuti Anda.`

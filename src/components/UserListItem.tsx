@@ -2,6 +2,7 @@ import { CheckSquare, Square, Tag, Check, X } from 'lucide-react';
 import { getLabelColor, getColorClasses } from '@/utils/labelColors';
 
 interface UserListItemProps {
+  index: number;
   user: string;
   isEditing: boolean;
   currentLabel?: string;
@@ -18,6 +19,7 @@ interface UserListItemProps {
 }
 
 export default function UserListItem({
+  index,
   user,
   isEditing,
   currentLabel,
@@ -75,9 +77,10 @@ export default function UserListItem({
         <div className="p-3.5 flex flex-col gap-1.5 w-full relative">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2 overflow-hidden">
+              <span className="text-zinc-400 font-mono text-xs lg:hidden shrink-0">{index}.</span>
               <button 
                 onClick={() => onToggleSelect(user)}
-                className={`shrink-0 z-20 transition-colors ${isSelected ? 'opacity-100 text-teal-600' : 'opacity-0 group-hover:opacity-100 text-zinc-300 hover:text-zinc-500'}`}
+                className={`shrink-0 z-20 transition-colors ${isSelected ? 'opacity-100 text-teal-600' : 'opacity-100 lg:opacity-0 lg:group-hover:opacity-100 text-zinc-300 hover:text-zinc-500'}`}
               >
                 {isSelected ? <CheckSquare className="w-4.5 h-4.5" /> : <Square className="w-4.5 h-4.5" />}
               </button>
@@ -115,7 +118,7 @@ export default function UserListItem({
                 onSetEditing(user);
                 onEditChange(currentLabel || "");
               }}
-              className={`p-1.5 rounded-md transition-colors shrink-0 ${currentLabel ? 'opacity-100 text-teal-600 hover:bg-teal-50' : 'opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100'}`}
+              className={`p-1.5 rounded-md transition-colors shrink-0 ${currentLabel ? 'opacity-100 text-teal-600 hover:bg-teal-50' : 'opacity-100 lg:opacity-0 lg:group-hover:opacity-100 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100'}`}
               title={language === 'en' ? 'Add/Edit Label' : 'Tambah/Edit Label'}
             >
               <Tag className="w-4 h-4" />
