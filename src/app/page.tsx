@@ -307,7 +307,7 @@ export default function Home() {
           {status === 'idle' && (
             <>
               {/* Clean Minimalist Hero */}
-              <div className="w-full flex flex-col lg:flex-row items-center justify-center px-6 pt-10 pb-12 md:pb-20 md:px-10 lg:px-16 gap-8 lg:gap-12">
+              <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center px-6 md:px-12 pt-10 pb-12 md:pb-20 gap-8 lg:gap-12">
                 
                 {/* Left Column */}
                 <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-center relative z-10 text-center lg:text-left lg:pr-4">
@@ -389,7 +389,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6 }}
-              className="w-full px-6"
+              className="w-full max-w-7xl mx-auto px-6 md:px-12"
             >
               <HistoryWidget onRestore={handleRestore} />
             </motion.div>

@@ -20,12 +20,12 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
   - **Hero Section:** Penjelasan singkat yang persuasif.
   - **`Features.tsx` & `HowItWorks.tsx`:** Penjelasan nilai jual dan cara penggunaan alat secara visual.
   - **`FAQ.tsx` & `PrivacySection.tsx`:** Menjawab keraguan pengguna tentang keamanan (100% Client-Side) dan pertanyaan umum.
-  - **`HistoryWidget.tsx`:** Menampilkan cuplikan hasil analisis sebelumnya yang tersimpan di memori lokal.
+  - **`HistoryWidget.tsx`:** Menampilkan cuplikan hasil analisis sebelumnya yang tersimpan di memori lokal. Didesain dengan gaya UI "Terminal Hacker" (menggunakan grid generatif dan efek border glow) yang sangat serasi dengan animasi *loading*.
   - **`ZipUploader.tsx` & Live Demo:** Area Drag & Drop yang menerima file ZIP dari Instagram, dilengkapi dengan tombol *Live Demo* untuk melihat pratinjau data simulasi. Ekstraksi ZIP asli dilakukan via `JSZip` secara aman di memori browser. Juga dilengkapi fitur **Rate Limiting** cerdas berbasis `FingerprintJS` untuk membatasi 5 unggahan per perangkat dalam sebulan.
   - **`LoadingScreen.tsx`:** Animasi *loading* bergaya "Terminal Hacker" (menggunakan Framer Motion) yang memberikan *feedback* interaktif kepada pengguna selama proses *parsing* file besar.
 - **`/dashboard` (Hasil Analisis):**
   - **`NewUnfollowersAlert.tsx`:** Notifikasi pintar yang mendeteksi unfollower baru dan akun "Kutu Loncat" (Hit & Run) dengan membandingkan data ZIP saat ini dengan hasil pemindaian sebelumnya dari LocalStorage.
-  - **`MetricCards.tsx` & `MutualStats.tsx`:** Menampilkan statistik metrik utama (Unfollowers, Fans, Mutual).
+  - **`MetricCards.tsx` & `MutualStats.tsx`:** Menampilkan statistik metrik utama (Unfollowers, Fans, Mutual). Memiliki konsistensi ikonografi (*UserMinus*, *Heart*, *Users*) yang tersinkronisasi penuh dengan `HistoryWidget.tsx` untuk membentuk UX yang kohesif.
   - **`AccountHealthRatio.tsx`:** Indikator *gauge* (Framer Motion) untuk rasio perbandingan Followers vs Following guna mengukur tingkat kesehatan akun.
   - **`LoyalFollowers.tsx` & `PendingRequests.tsx`:** Menampilkan daftar pengikut yang bertahan paling lama dan daftar akun yang belum menerima permintaan *follow* Anda.
   - **Visualisasi Data (`Recharts`):**
