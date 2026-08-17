@@ -1,6 +1,6 @@
 import { useLanguage } from '@/i18n/LanguageContext';
 import Link from 'next/link';
-import { Camera, Shield, FileText, Mail } from 'lucide-react';
+import { Shield, FileText, Mail } from 'lucide-react';
 import EmailSupportLink from './EmailSupportLink';
 
 export default function Footer() {
@@ -15,9 +15,7 @@ export default function Footer() {
           
           {/* Logo & Slogan */}
           <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-            <div className="bg-emerald-500 text-zinc-950 p-2.5 rounded-xl shadow-sm">
-              <Camera size={28} />
-            </div>
+            <img src="/logo.png" alt="Followins Logo" className="w-12 h-12 object-contain" />
             <div>
               <span className="font-bold text-2xl tracking-tight text-white font-mono block">
                 FOLLOWINS

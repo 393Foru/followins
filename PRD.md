@@ -37,6 +37,8 @@ Followins adalah alat analitik Instagram berbasis web yang mengutamakan privasi 
 - **Ruang Monetisasi Iklan (Google AdSense):** Memanfaatkan efisiensi biaya server (*Client-Side*) dengan menyisipkan slot iklan (AdSense/Affiliate) yang tidak mengganggu untuk meraup pendapatan pasif dari lalu lintas pengguna gratis.
 
 ### 4.3. Infrastruktur, Keamanan, & Distribusi
+- **Homepage Teaser/Demo Interaktif:** Memberikan animasi kisi-kisi atau simulasi interaktif (*teaser*) di halaman depan sebelum pengguna mengunggah ZIP, agar pengguna mendapat gambaran pasti tentang nilai fitur (*Unfollower* dan Kutu Loncat) yang akan mereka dapatkan, sehingga meningkatkan tingkat konversi unggahan.
+- **Sistem Tiket & Formulir Kontak (In-App Support):** Mengganti tautan `mailto:` saat ini dengan sistem formulir pesan bawaan (*built-in*) agar pengguna tidak dipaksa membuka aplikasi *email* eksternal (seperti Outlook/Mail) saat ingin meminta bantuan atau melaporkan *bug*.
 - **Serverless Anti-Jebol (Vercel):** Memastikan arsitektur web tetap 100% terdistribusi di sisi klien agar limitasi fungsi eksekusi Vercel (10 detik pada *Hobby Tier*) tidak pernah tersentuh, mengizinkan skalabilitas tak terbatas secara gratis.
 - **Server-Side Rate Limiting via Vercel KV (Redis):** Meng-upgrade keamanan anti-spam yang tadinya mengandalkan *Browser LocalStorage/FingerprintJS* menjadi sistem basis data Redis (Vercel KV). Ini menambal kelemahan versi gratis di mana *user* nakal mencoba mereset limit 5x *upload* dengan cara membersihkan riwayat *cache* browser.
 - **Domain Bootstrapping & Cloudflare:** Peluncuran tahap awal menggunakan domain hemat biaya (`.my.id`) sebelum ditingkatkan ke domain premium (`.app`), dikombinasikan dengan manajemen DNS dan proteksi DDoS dari Cloudflare.

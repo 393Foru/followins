@@ -76,6 +76,7 @@ export default function PrivacySection() {
                   <div className="flex items-center gap-2 mt-2"><span className="text-emerald-500">{`>`}</span> Cross-referencing sets...</div>
                   <div className="flex items-center gap-2 text-zinc-100 border-b border-zinc-800 pb-1 inline-flex"><span className="text-emerald-500">{`>`}</span> Found 142 Unfollowers.</div>
                   <div className="flex items-center gap-2 mt-4"><span className="text-emerald-500">{`>`}</span> Rendering UI.</div>
+                  <div className="flex items-center gap-2 text-zinc-400"><span className="text-emerald-500">{`>`}</span> Preparing PDF export engine [OFFLINE]...</div>
                   <div className="mt-10 border-t border-dashed border-zinc-800 pt-6 opacity-70 text-xs md:text-sm space-y-1 text-zinc-500">
                     <div>{`// ALL OPERATIONS PERFORMED IN-BROWSER`}</div>
                     <div>{`// DATA IS DESTROYED UPON EXIT`}</div>

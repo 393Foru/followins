@@ -8,7 +8,7 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
 - **Warna Aksen:** Palet elegan berbasis `Zinc` (abu-abu gelap) untuk kerangka utama, dikombinasikan dengan aksen warna solid (Emerald, Amber, Blue, Pink) untuk tombol dan indikator status.
 - **Tipografi Fluid:** *Inter* atau *Geist* (Modern, bersih, mudah dibaca) didukung oleh sistem **Fluid Typography** (menggunakan fungsi CSS `clamp()`) di `globals.css`. Ini memastikan teks dapat membesar/mengecil secara otomatis dan proporsional mengikuti lebar layar pengguna tanpa pergeseran tata letak (*layout shift*) yang mengganggu.
 - **Animasi & Interaksi:** Menggunakan library **Framer Motion** untuk menyajikan *micro-animations* dan *scroll-triggered animations* (misalnya `<motion.div whileInView="...">`). Hal ini memberikan nuansa responsif dan "hidup" pada antarmuka.
-- **Aset Visual:** Penggunaan gambar latar estetik (`cloud-bg.jpg`, `3d-zip.jpg`) dan pola grid CSS generatif (`linear-gradient`) untuk memberikan kesan 3D dan kedalaman (*depth*) pada area *hero* dan kartu fitur.
+- **Aset Visual & Branding:** Penggunaan gambar latar estetik (`cloud-bg.jpg`, `3d-zip.jpg`) dan pola grid CSS generatif (`linear-gradient`) untuk memberikan kesan 3D dan kedalaman (*depth*) pada area *hero* dan kartu fitur. Identitas merek diperkuat melalui injeksi `logo.png` secara konsisten pada `Header.tsx`, `Footer.tsx`, dan generator ekspor `FollowinsReportPDF.tsx`, serta penyertaan *signature* atribusi "A PROJECT BY AMATAMA.INC" pada *footer*.
 
 ## 3. Komponen Utama & Halaman (Routes)
 - **Komponen Global:**

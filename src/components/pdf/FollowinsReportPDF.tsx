@@ -1,5 +1,5 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 import { ParseResult } from '@/utils/instagramParser';
 import { deobfuscate } from '@/utils/crypto';
 
@@ -307,7 +307,10 @@ export const FollowinsReportPDF: React.FC<FollowinsReportPDFProps> = ({ data, li
         {/* Header */}
         <View style={styles.header} fixed>
           <View style={styles.headerLeft}>
-            <Text style={styles.logo}>Followins</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+              <Image src="/logo.png" style={{ width: 24, height: 24, marginRight: 8 }} />
+              <Text style={styles.logo}>Followins</Text>
+            </View>
             <Text style={styles.reportTitle}>{t.reportTitle}</Text>
           </View>
           <View style={styles.headerRight}>
