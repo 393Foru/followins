@@ -40,7 +40,7 @@ export default function RelationshipPieChart({ unfollowers, fans, mutuals }: Rel
   return (
     <div className="w-full h-full flex flex-col bg-white border border-zinc-200 rounded-2xl lg:rounded-3xl p-5 lg:p-8 shadow-sm relative overflow-hidden">
       
-      <div className="relative z-10 mb-4 lg:mb-8 border-b border-zinc-200 pb-4 lg:pb-6">
+      <div className="relative z-10 border-b border-zinc-200 pb-4 lg:pb-6">
         <h3 className="text-fluid-widget-title font-bold text-zinc-900 tracking-tight mb-1 lg:mb-2">{t('relTitle')}</h3>
         <p className="text-fluid-widget-desc text-zinc-600 font-light max-w-2xl">
           {t('relDesc')}

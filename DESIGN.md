@@ -38,6 +38,7 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
     - Bulk Actions untuk pelabelan massal.
     - Fungsi Pencarian (*Search*) dan Filter.
     - Penyortiran (terkunci Paywall untuk *Asc/Desc*).
+    - **Sistem Pagination:** Membagi daftar panjang menjadi 20 item per halaman demi mengoptimalkan kecepatan render DOM.
     - Batasan klik profil (maks 10 profil unik/hari untuk versi gratis).
     - Sisa data disembunyikan menggunakan *Skeleton Dummy Data* (Anti-F12).
 - **`PaywallModal.tsx`:**

@@ -26,7 +26,7 @@ export default function MutualStats({ data }: MutualStatsProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 relative z-10 pt-2 lg:pt-4 pb-2">
         {/* You First */}
         <div className="flex flex-row lg:flex-col items-center lg:items-start text-left group w-full gap-4 lg:gap-0">
-          <div className="text-4xl lg:text-6xl font-black font-mono tracking-tight text-teal-600 lg:mb-3 leading-tight group-hover:text-teal-500 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.youFirst.toString()}>
+          <div className="text-3xl sm:text-4xl lg:text-3xl xl:text-5xl font-black font-mono tracking-tight text-teal-600 lg:mb-2 leading-tight whitespace-nowrap group-hover:text-teal-500 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.youFirst.toString()}>
             {formatCompactNumber(data.youFirst)}
           </div>
           <div className="flex flex-col flex-1">
@@ -37,7 +37,7 @@ export default function MutualStats({ data }: MutualStatsProps) {
         
         {/* Same Day */}
         <div className="flex flex-row lg:flex-col items-center lg:items-start text-left border-t lg:border-t-0 lg:border-l border-zinc-200 pt-3 lg:pt-0 lg:pl-6 group w-full gap-4 lg:gap-0">
-          <div className="text-4xl lg:text-6xl font-black font-mono tracking-tight text-emerald-500 lg:mb-3 leading-tight group-hover:text-emerald-400 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.sameDay.toString()}>
+          <div className="text-3xl sm:text-4xl lg:text-3xl xl:text-5xl font-black font-mono tracking-tight text-emerald-500 lg:mb-2 leading-tight whitespace-nowrap group-hover:text-emerald-400 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.sameDay.toString()}>
             {formatCompactNumber(data.sameDay)}
           </div>
           <div className="flex flex-col flex-1">
@@ -48,7 +48,7 @@ export default function MutualStats({ data }: MutualStatsProps) {
 
         {/* Them First */}
         <div className="flex flex-row lg:flex-col items-center lg:items-start text-left border-t lg:border-t-0 lg:border-l border-zinc-200 pt-3 lg:pt-0 lg:pl-6 group w-full gap-4 lg:gap-0">
-          <div className="text-4xl lg:text-6xl font-black font-mono tracking-tight text-zinc-400 lg:mb-3 leading-tight group-hover:text-zinc-500 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.themFirst.toString()}>
+          <div className="text-3xl sm:text-4xl lg:text-3xl xl:text-5xl font-black font-mono tracking-tight text-zinc-400 lg:mb-2 leading-tight whitespace-nowrap group-hover:text-zinc-500 transition-colors w-20 lg:w-full shrink-0 text-center lg:text-left" title={data.themFirst.toString()}>
             {formatCompactNumber(data.themFirst)}
           </div>
           <div className="flex flex-col flex-1">

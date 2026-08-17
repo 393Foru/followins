@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Lock, Tag, X, Check, Filter, CheckSquare, Square, Search, ArrowDownAZ, ArrowUpZA, Shuffle } from 'lucide-react';
+import { Lock, Tag, X, Check, Filter, CheckSquare, Square, Search, ArrowDownAZ, ArrowUpZA, Shuffle, ChevronLeft, ChevronRight } from 'lucide-react';
 import PaywallModal from './PaywallModal';
 import { deobfuscate } from '@/utils/crypto';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -37,6 +37,15 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
   const [bulkLabelValue, setBulkLabelValue] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"random" | "asc" | "desc">("random");
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
+
+  // Reset pagination when filters/tabs change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, labelFilter, searchQuery, sortBy]);
 
   // Subsets are handled by the parent component now
   // We use unfollowers and fans directly as they are already filtered if not premium
@@ -315,15 +324,16 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
         </div>
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 relative z-10">
-          {displayList.map((user, idx) => {
+          {displayList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((user, idx) => {
+            const actualIndex = (currentPage - 1) * itemsPerPage + idx;
             const isEditing = editingUser === user;
             const currentLabel = labels[user];
             const isSelected = selectedUsers.includes(user);
             
             return (
               <UserListItem 
-                key={idx}
-                index={idx + 1}
+                key={actualIndex}
+                index={actualIndex + 1}
                 user={user}
                 isEditing={isEditing}
                 currentLabel={currentLabel}
@@ -351,17 +361,47 @@ export default function UserTable({ unfollowers, fans, mutuals, ownerUsername, i
           ))}
         </ul>
 
+        {/* Pagination Controls */}
+        {displayList.length > itemsPerPage && (
+          <div className="flex items-center justify-between mt-8 border-t border-zinc-200 pt-6">
+            <span className="text-sm text-zinc-500 font-medium hidden sm:inline-block">
+              {language === 'en' ? 'Showing' : 'Menampilkan'} <span className="font-bold text-zinc-900">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="font-bold text-zinc-900">{Math.min(currentPage * itemsPerPage, displayList.length)}</span> {language === 'en' ? 'of' : 'dari'} <span className="font-bold text-zinc-900">{displayList.length}</span> {language === 'en' ? 'accounts' : 'akun'}
+            </span>
+            <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-between sm:justify-end">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span className="hidden min-[360px]:inline">{language === 'en' ? 'Prev' : 'Sebelumnya'}</span>
+              </button>
+              <span className="text-xs sm:text-sm text-zinc-500 font-medium sm:hidden whitespace-nowrap px-1">
+                {currentPage} / {Math.ceil(displayList.length / itemsPerPage)}
+              </span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(Math.ceil(displayList.length / itemsPerPage), p + 1))}
+                disabled={currentPage >= Math.ceil(displayList.length / itemsPerPage)}
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 hover:text-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <span className="hidden min-[360px]:inline">{language === 'en' ? 'Next' : 'Selanjutnya'}</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {!isPremium && totalHidden > 0 && (
-          <div className="mt-12 text-center p-8 md:p-10 bg-white border border-zinc-200 rounded-3xl relative overflow-hidden z-10 shadow-lg">
+          <div className="mt-12 text-center p-5 sm:p-8 md:p-10 bg-white border border-zinc-200 rounded-2xl md:rounded-3xl relative overflow-hidden z-10 shadow-lg">
             <Lock className="mx-auto text-zinc-400 mb-4 opacity-80" size={48} />
-            <h4 className="text-fluid-h2 font-black font-mono text-zinc-900 mb-3 tracking-tight leading-tight">{t('hiddenNames1')} <span className="text-teal-600">{formatCompactNumber(totalHidden)}</span> {t('hiddenNames2')}</h4>
-            <p className="text-fluid-p text-zinc-600 font-light max-w-2xl mx-auto mb-8 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('hiddenDesc') }} />
+            <h4 className="text-2xl sm:text-fluid-h2 font-black font-mono text-zinc-900 mb-3 tracking-tight leading-tight break-words">{t('hiddenNames1')} <span className="text-teal-600">{formatCompactNumber(totalHidden)}</span> {t('hiddenNames2')}</h4>
+            <p className="text-sm sm:text-fluid-p text-zinc-600 font-light max-w-2xl mx-auto mb-8 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('hiddenDesc') }} />
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-medium shadow-sm transition-colors text-lg flex items-center gap-3 mx-auto"
+              className="w-full sm:w-auto px-4 py-3 sm:px-8 sm:py-4 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-medium shadow-sm transition-colors text-base sm:text-lg flex items-center justify-center gap-2 sm:gap-3 mx-auto"
             >
-              <Lock size={20} />
-              {t('unlockAll')}
+              <Lock size={18} className="sm:w-5 sm:h-5 shrink-0" />
+              <span>{t('unlockAll')}</span>
             </button>
           </div>
         )}

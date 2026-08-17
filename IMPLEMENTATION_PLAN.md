@@ -29,6 +29,7 @@ Rencana eksekusi langkah demi langkah untuk membangun Minimum Viable Product (MV
 - [x] Refaktor *Paywall*: Pindahkan logika pemotongan array (slice data) ke komponen induk (`page.tsx`) agar keamanan terjamin dan mempermudah render.
 - [x] **Refaktorisasi & Clean Code:** Ekstraksi logika filter ke custom hook `useUserFilter.ts`, pecah komponen besar menjadi bagian modular (`UserListItem.tsx`, `ChartContainer.tsx`, `LegalPageLayout.tsx`).
 - [x] **Fluid Typography & Responsive UI:** Terapkan fungsi `clamp()` di `globals.css` untuk memastikan ukuran teks beradaptasi secara mulus di berbagai perangkat tanpa *breakpoint* kaku, meningkatkan *Premium Feel*.
+- [x] **Optimasi Performa (Pagination):** Terapkan Pagination pada `UserTable.tsx` (menampilkan 20 akun per halaman) untuk mencegah *lag* saat merender ribuan elemen DOM (*Performance Boost*).
 
 ## Tahap 4: Sistem Bisnis (Rate Limit & Paywall)
 - [x] **Rate Limiting:** Integrasikan `FingerprintJS` untuk mendeteksi ID perangkat (*visitorId*) secara *client-side* dan berikan pembatasan maksimal 5 kali unggah ZIP per bulan per perangkat pada komponen `ZipUploader.tsx`.
