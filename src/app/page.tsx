@@ -338,18 +338,18 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-6 text-sm font-medium text-zinc-700"
+                    className="flex flex-nowrap items-center justify-center lg:justify-start gap-1 sm:gap-2 lg:gap-3 text-xs sm:text-sm font-medium text-zinc-700 w-full"
                   >
-                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
-                      <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                    <div className="flex items-center gap-1 sm:gap-2 bg-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-zinc-200 shadow-sm whitespace-nowrap">
+                      <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
                       <span>{language === 'en' ? 'No Data Stored' : 'Data Aman'}</span>
                     </div>
-                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
-                      <Zap className="w-4 h-4 text-amber-500" />
+                    <div className="flex items-center gap-1 sm:gap-2 bg-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-zinc-200 shadow-sm whitespace-nowrap">
+                      <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
                       <span>{language === 'en' ? 'Instant Results' : 'Hasil Instan'}</span>
                     </div>
-                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
-                      <Lock className="w-4 h-4 text-blue-500" />
+                    <div className="flex items-center gap-1 sm:gap-2 bg-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-zinc-200 shadow-sm whitespace-nowrap">
+                      <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 shrink-0" />
                       <span>{language === 'en' ? 'Fully Private' : '100% Privat'}</span>
                     </div>
                   </motion.div>
