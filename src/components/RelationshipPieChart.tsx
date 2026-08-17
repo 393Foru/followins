@@ -30,6 +30,8 @@ export default function RelationshipPieChart({ unfollowers, fans, mutuals }: Rel
     // For simplicity, we just use a contrasting color strategy:
     const fillCol = (index === 1) ? "#000" : "#fff";
 
+    if (percent < 0.05) return null;
+
     return (
       <text x={x} y={y} fill={fillCol} fontSize="13" fontWeight="bold" textAnchor="middle" dominantBaseline="central">
         {`${(percent * 100).toFixed(1)}%`}
@@ -47,15 +49,15 @@ export default function RelationshipPieChart({ unfollowers, fans, mutuals }: Rel
         </p>
       </div>
       
-      <div className="h-48 lg:h-80 w-full flex justify-center items-center relative z-10">
+      <div className="h-64 md:h-72 lg:h-80 w-full flex justify-center items-center relative z-10 mt-4 lg:mt-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={filteredData}
               cx="50%"
               cy="50%"
-              innerRadius="50%"
-              outerRadius="80%"
+              innerRadius="40%"
+              outerRadius="90%"
               labelLine={false}
               label={renderCustomizedLabel}
               dataKey="value"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShieldCheck, Zap, Lock, Printer, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -34,6 +34,18 @@ export default function Home() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle');
   const [result, setResult] = useState<ParseResult | null>(null);
   const [history, setHistory] = useState<HistoryRecord[]>([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasHistoryForDivider, setHasHistoryForDivider] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('followins_history');
+      if (stored && JSON.parse(stored).length > 0) {
+        setHasHistoryForDivider(true);
+      }
+    } catch (e) {}
+  }, []);
+  
   const [isDemo, setIsDemo] = useState(false);
   
   // States for new features
@@ -293,10 +305,10 @@ export default function Home() {
           {status === 'idle' && (
             <>
               {/* Clean Minimalist Hero */}
-              <div className="w-full flex flex-col md:flex-row items-center justify-center px-6 pt-10 pb-12 md:pb-20 md:px-10 md:px-16 gap-8 md:gap-12">
+              <div className="w-full flex flex-col lg:flex-row items-center justify-center px-6 pt-10 pb-12 md:pb-20 md:px-10 lg:px-16 gap-8 lg:gap-12">
                 
                 {/* Left Column */}
-                <div className="w-full md:w-1/2 flex flex-col justify-center relative z-10 text-left md:pr-4">
+                <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-center relative z-10 text-center lg:text-left lg:pr-4">
                   <motion.h1 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -316,7 +328,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="text-fluid-p text-zinc-600 max-w-xl leading-relaxed mx-0 font-light mb-8"
+                    className="text-fluid-p text-zinc-600 max-w-xl leading-relaxed mx-auto lg:mx-0 font-light mb-8"
                   >
                     {t('heroDesc')}
                   </motion.p>
@@ -326,7 +338,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="flex flex-wrap items-center justify-start gap-3 sm:gap-6 text-sm font-medium text-zinc-700"
+                    className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-6 text-sm font-medium text-zinc-700"
                   >
                     <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
                       <ShieldCheck className="w-4 h-4 text-emerald-500" />
@@ -348,7 +360,7 @@ export default function Home() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
-                  className="w-full md:w-1/2 flex flex-col items-center md:items-end justify-center relative z-10"
+                  className="w-full lg:w-1/2 flex flex-col items-center lg:items-end justify-center relative z-10 mt-8 lg:mt-0"
                 >
                   <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-xl p-6 md:p-8 shadow-sm relative overflow-hidden">
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
@@ -367,6 +379,8 @@ export default function Home() {
                   </div>
                 </motion.div>
               </div>
+              
+            {hasHistoryForDivider && <hr className="w-full border-zinc-300" />}
 
             <motion.div 
               initial={{ opacity: 0, y: 40 }}

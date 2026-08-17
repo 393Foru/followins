@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useLanguage } from '@/i18n/LanguageContext';
 import ChartContainer from './ChartContainer';
@@ -12,7 +12,21 @@ interface CohortChartProps {
 export default function CohortChart({ data }: CohortChartProps) {
   const { t } = useLanguage();
   const [currentPage, setCurrentPage] = useState(1);
+  const [isTablet, setIsTablet] = useState(false);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Tablet view: 768px to 1023px
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    
+    // Initial check
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (!data || data.length === 0) return null;
 
@@ -26,6 +40,8 @@ export default function CohortChart({ data }: CohortChartProps) {
   const reversedData = [...data].reverse();
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = reversedData.slice(startIndex, startIndex + itemsPerPage).reverse();
+
+  const currentStackId = isTablet ? undefined : "a";
 
   return (
     <ChartContainer title={t('cohortTitle')} description={t('cohortDesc')}>
@@ -41,9 +57,9 @@ export default function CohortChart({ data }: CohortChartProps) {
               itemStyle={{ fontWeight: 'bold' }}
             />
             
-            <Bar dataKey="mutuals" name={t('cohortMutuals')} stackId="a" fill="#10b981" maxBarSize={40} isAnimationActive={false} />
-            <Bar dataKey="fans" name={t('cohortFans')} stackId="a" fill="#14b8a6" maxBarSize={40} isAnimationActive={false} />
-            <Bar dataKey="unfollowers" name={t('cohortUnfollowers')} stackId="a" fill="#52525b" maxBarSize={40} radius={[6, 6, 0, 0]} isAnimationActive={false} />
+            <Bar dataKey="mutuals" name={t('cohortMutuals')} stackId={currentStackId} fill="#10b981" maxBarSize={40} isAnimationActive={false} radius={isTablet ? [4, 4, 0, 0] : [0, 0, 0, 0]} />
+            <Bar dataKey="fans" name={t('cohortFans')} stackId={currentStackId} fill="#14b8a6" maxBarSize={40} isAnimationActive={false} radius={isTablet ? [4, 4, 0, 0] : [0, 0, 0, 0]} />
+            <Bar dataKey="unfollowers" name={t('cohortUnfollowers')} stackId={currentStackId} fill="#52525b" maxBarSize={40} radius={isTablet ? [4, 4, 0, 0] : [6, 6, 0, 0]} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>
       </div>

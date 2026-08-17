@@ -7,7 +7,8 @@ Followins adalah alat pelacak pengikut Instagram yang 100% berbasis privasi (Cli
 - **Tema Utama:** Dukungan Dual Theme (Light & Dark Mode) via setelan lokal `ThemeContext`. Desainnya mengusung sentuhan minimalis, bayangan halus (soft shadow), dan *whitespace* yang lega layaknya aplikasi premium modern.
 - **Warna Aksen:** Palet elegan berbasis `Zinc` (abu-abu gelap) untuk kerangka utama, dikombinasikan dengan aksen warna solid (Emerald, Amber, Blue, Pink) untuk tombol dan indikator status.
 - **Tipografi Fluid:** *Inter* atau *Geist* (Modern, bersih, mudah dibaca) didukung oleh sistem **Fluid Typography** (menggunakan fungsi CSS `clamp()`) di `globals.css`. Ini memastikan teks dapat membesar/mengecil secara otomatis dan proporsional mengikuti lebar layar pengguna tanpa pergeseran tata letak (*layout shift*) yang mengganggu.
-- **Aset Visual:** Penggunaan gambar latar estetik (`cloud-bg.jpg`, `3d-zip.jpg`) untuk memberikan kesan 3D yang imersif pada area hero dan *uploader*.
+- **Animasi & Interaksi:** Menggunakan library **Framer Motion** untuk menyajikan *micro-animations* dan *scroll-triggered animations* (misalnya `<motion.div whileInView="...">`). Hal ini memberikan nuansa responsif dan "hidup" pada antarmuka.
+- **Aset Visual:** Penggunaan gambar latar estetik (`cloud-bg.jpg`, `3d-zip.jpg`) dan pola grid CSS generatif (`linear-gradient`) untuk memberikan kesan 3D dan kedalaman (*depth*) pada area *hero* dan kartu fitur.
 
 ## 3. Komponen Utama & Halaman (Routes)
 - **Komponen Global:**

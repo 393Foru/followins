@@ -34,14 +34,14 @@ export default function HowItWorks() {
         <p className="text-fluid-subtitle text-zinc-600 font-light leading-relaxed">{t('howItWorksDesc')}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {steps.map((step, idx) => (
-          <div key={idx} className="group relative flex flex-row lg:flex-col items-start gap-4 lg:gap-0 p-5 lg:p-8 rounded-2xl bg-zinc-900 border border-zinc-800 transition-all shadow-lg overflow-hidden hover:border-emerald-500/50">
+          <div key={idx} className="group relative flex flex-row sm:flex-col items-start gap-4 sm:gap-0 p-5 sm:p-6 lg:p-8 rounded-2xl bg-zinc-900 border border-zinc-800 transition-all shadow-lg overflow-hidden hover:border-emerald-500/50">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
             
             <div className="absolute top-2 right-3 lg:top-4 lg:right-6 text-fluid-h1 font-black text-zinc-800/40 group-hover:text-zinc-700/50 transition-colors select-none z-10 pointer-events-none">0{idx + 1}</div>
               
-            <div className="w-12 h-12 lg:w-14 lg:h-14 shrink-0 rounded-xl flex items-center justify-center mb-0 lg:mb-8 bg-emerald-500/10 border border-emerald-500/20 group-hover:border-emerald-500/40 transition-all [&>svg]:w-5 [&>svg]:h-5 lg:[&>svg]:w-8 lg:[&>svg]:h-8 [&>svg]:text-emerald-500 relative z-20">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-xl flex items-center justify-center mb-0 sm:mb-6 lg:mb-8 bg-emerald-500/10 border border-emerald-500/20 group-hover:border-emerald-500/40 transition-all [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-7 sm:[&>svg]:h-7 lg:[&>svg]:w-8 lg:[&>svg]:h-8 [&>svg]:text-emerald-500 relative z-20">
               {step.icon}
             </div>
             
